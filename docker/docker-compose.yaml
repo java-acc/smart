@@ -1,0 +1,148 @@
+services:
+  ############## ELK ##############
+  elasticsearch:
+    build:
+      context: ./elk/es
+      dockerfile: Dockerfile
+    image: custom-elasticsearch:7.17.25
+    container_name: es
+    hostname: es
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./elk/es/data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - dev_network
+  elasticsearch-head:
+    build:
+      context: ./elk/es-head
+      dockerfile: Dockerfile
+    image: custom-elasticsearch-head:5
+    container_name: es-admin
+    hostname: es-admin
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 9100:9100
+    networks:
+      - dev_network
+  logstash:
+    build:
+      context: ./elk/logstash
+      dockerfile: Dockerfile
+    image: custom-logstash:7.17.25
+    container_name: logstash
+    hostname: logstash
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 5044:5044
+      - 9600:9600
+    networks:
+      - dev_network
+  kibana:
+    image: kibana:7.17.25
+    container_name: kibana
+    hostname: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es:9200
+      - I18N_LOCALE=zh-CN
+      - TZ=Asia/Shanghai
+    ports:
+      - 5601:5601
+    networks:
+      - dev_network
+  ############## ELK END ##############
+
+
+#
+#  mongodb:
+#    image: 'mongo:8.0.3'
+#    container_name: mongo
+#    hostname: mongo
+#    environment:
+#      - 'MONGO_INITDB_DATABASE=smart'
+#      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
+#      - 'MONGO_INITDB_ROOT_USERNAME=root'
+#    ports:
+#      - '27017:27017'
+#  mysql:
+#    build:
+#      context: .
+#      dockerfile: ./mysql/Dockerfile
+#    container_name: mysql
+#    hostname: mysql
+#    privileged: true
+#    restart: always
+#    command:
+#      --default-authentication-plugin=mysql_native_password
+#      --character-set-server=utf8mb4
+#      --collation-server=utf8mb4_unicode_ci
+#      --lower_case_table_names=1
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=root
+#      - TZ=Asia/Shanghai
+#      - SET_CONTAINER_TIMEZONE=true
+#      - CONTAINER_TIMEZONE=Asia/Shanghai
+#      - MYSQL_DATABASE=nacos
+#      - MYSQL_PASSWORD=nacos
+#      - MYSQL_USER=nacos
+#    ports:
+#      - '3306:3306'
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+#      interval: 5s
+#      timeout: 10s
+#      retries: 10
+#  redis:
+#    image: 'redis:7.0.15'
+#    container_name: redis
+#    hostname: redis
+#    restart: always
+#    ports:
+#      - '6379:6379'
+#  nacos:
+#    image: nacos/nacos-server:v2.3.2
+#    container_name: nacos
+#    hostname: nacos
+#    restart: always
+#    ports:
+#      - 8848:8848
+#  rocketmq:
+#    image: apache/rocketmq:5.1.4
+#    container_name: rocketmq
+#    hostname: rocketmq
+#    restart: always
+#    ports:
+#      - 10911:10911
+#      - 10909:10909
+#      - 10912:10912
+#      - 9876:9876
+#  seata:
+#    image: seataio/seata-server:2.0.0
+#    container_name: seata
+#    hostname: seata
+#    restart: always
+#    ports:
+#      - 8091:8091
+#      - 7091:7091
+#  zookeeper:
+#    image: zookeeper:3.9
+#    container_name: zookeeper
+#    hostname: zookeeper
+#    restart: always
+#    ports:
+#      - '2181:2181'
+
+networks:
+  dev_network:
+    driver: bridge
