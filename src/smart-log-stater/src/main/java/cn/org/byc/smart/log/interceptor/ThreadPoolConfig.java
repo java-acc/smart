@@ -2,6 +2,7 @@ package cn.org.byc.smart.log.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -17,6 +18,18 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 @Slf4j
 public class ThreadPoolConfig {
+
+
+    @Value("${sys.threadPool.corePoolSize:15}")
+    private Integer corePoolSize;
+    @Value("${sys.threadPool.maxPoolSize:100}")
+    private Integer maxPoolSize;
+    @Value("${sys.threadPool.keepAliveSeconds:15}")
+    private Integer keepAliveSeconds;
+    @Value("${sys.threadPool.queueCapacity:3000}")
+    private Integer queueCapacity;
+    @Value("${sys.threadPool.threadNamePrefix:thread-pool-}")
+    private String threadNamePrefix;
 
     @Bean(value = "threadPoolExecutor")
     public ThreadPoolTaskExecutor threadPoolExecutor() {
@@ -66,16 +79,16 @@ public class ThreadPoolConfig {
                 });
             }
         };
-        executor.setCorePoolSize(15);
+        executor.setCorePoolSize(corePoolSize);
         // 配置最大线程数
-        executor.setMaxPoolSize(100);
+        executor.setMaxPoolSize(maxPoolSize);
         // 空线程回收时间15s
-        executor.setKeepAliveSeconds(15);
+        executor.setKeepAliveSeconds(keepAliveSeconds);
         Executors.defaultThreadFactory();
         // 配置队列大小
-        executor.setQueueCapacity(3000);
+        executor.setQueueCapacity(queueCapacity);
         // 配置线程池中的线程的名称前缀
-        executor.setThreadNamePrefix("async-order-service-");
+        executor.setThreadNamePrefix(threadNamePrefix);
         // rejection-policy：当pool已经达到max size的时候，如何处理新任务
         // CALLER_RUNS：不在新线程中执行任务，而是由调用者所在的线程来执行
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
@@ -83,4 +96,6 @@ public class ThreadPoolConfig {
         executor.initialize();
         return executor;
     }
+
+
 }
