@@ -33,6 +33,7 @@
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <hutool-all.version>5.8.32</hutool-all.version>
         <guava.version>33.3.1-jre</guava.version>
+        <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
 
         <!-- plugin version -->
         <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
@@ -85,6 +86,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
 
         </dependencies>

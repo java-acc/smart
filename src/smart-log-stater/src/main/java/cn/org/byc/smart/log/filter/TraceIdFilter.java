@@ -1,37 +1,34 @@
 package cn.org.byc.smart.log.filter;
 
 import cn.hutool.core.lang.UUID;
+import cn.org.byc.smart.log.utils.TraceIdUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.MDC;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
 
 public class TraceIdFilter extends OncePerRequestFilter {
 
-    public static final String TRACE_ID = "x-trace-id";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String traceId = request.getHeader(TRACE_ID);
+            String traceId = request.getHeader(TraceIdUtil.HEADER_TRACE_ID);
             if (StringUtils.isEmpty(traceId)) {
-                traceId = UUID.randomUUID().toString().replace("-", "");
+                traceId = TraceIdUtil.generateTraceId();
                 request = new TraceIdRequestWrapper(request, traceId);
             }
-            response.setHeader(TRACE_ID, traceId);
-            MDC.put(TRACE_ID, traceId);
+            response.setHeader(TraceIdUtil.HEADER_TRACE_ID, traceId);
+            TraceIdUtil.setTraceId(traceId);
             filterChain.doFilter(request, response);
         } finally {
-            MDC.clear();
+            TraceIdUtil.clear();
         }
     }
 
@@ -45,7 +42,7 @@ public class TraceIdFilter extends OncePerRequestFilter {
 
         @Override
         public String getHeader(String name) {
-            if (TRACE_ID.equalsIgnoreCase(name)) {
+            if (TraceIdUtil.HEADER_TRACE_ID.equalsIgnoreCase(name)) {
                 return traceId;
             }
             return super.getHeader(name);
