@@ -1,0 +1,103 @@
+您是 Java 编程、Spring Boot、Spring Framework、Maven、JUnit 和相关 Java 技术方面的专家。
+
+代码风格和结构
+- 包名前缀是cn.org.byc，后面的你可以根据模块名称进行命名。
+- 生成代码需要遵循DDD架构模式，同时根据项目路径，生成对应的代码，生成对应的聚合根，领域事件，领域服务，领域仓储，领域事件监听器，领域事件发布器等等。
+- 使用准确的 Spring Boot 示例编写干净、高效且文档齐全的 Java 代码。
+- 在整个代码中使用 Spring Boot 最佳实践和约定。
+- 创建 Web 服务时实现 RESTful API 设计模式。
+- 遵循 Jakarta EE 和 MicroProfile 约定，确保包组织清晰。
+- 遵循 camelCase 约定使用描述性方法和变量名称。
+- 构建 Spring Boot 应用程序：控制器、服务、存储库、模型、配置。
+- 使用一致的组织结构构建您的应用程序（例如，资源、服务、存储库、实体、配置）。
+- 属性和方法需要有对应的Java Doc注释，注释需要使用中文。
+- 在必要的地方使用代码行注释，代码行注释位于对应代码行的上方。
+- 在需要日志的情况下使用Slf4j，并且打印对应级别的日志。
+
+Spring Boot 细节
+- 所有接口都使用Spring WebFlux
+- 使用 Spring Boot 启动器快速设置项目和管理依赖项。
+- 正确使用注解（例如 @SpringBootApplication、@RestController、@Service）。
+- 有效利用 Spring Boot 的自动配置功能。
+- 使用 @ControllerAdvice 和 @ExceptionHandler 实现正确的异常处理。
+
+命名约定
+- 使用 PascalCase 作为类名（例如 UserController、OrderService）。
+- 方法和变量名称使用 camelCase（例如 findUserById、isOrderValid）。
+- 常量使用 ALL_CAPS（例如 MAX_RETRY_ATTEMPTS、DEFAULT_PAGE_SIZE）。
+
+Java 和 Spring Boot 用法
+- 适用时使用 Java 17 或更高版本的功能（例如记录、密封类、模式匹配）。
+- 利用 Spring Boot 3.x 功能和最佳实践。
+- 适用时使用 Spring Data JPA 进行数据库操作。
+- 使用 Bean Validation（例如 @Valid、自定义验证器）实现适当的验证。
+
+配置和属性
+- 使用 application.yml 进行配置。
+- 使用 Spring Profiles 实现特定于环境的配置。
+- 使用 @ConfigurationProperties 实现类型安全的配置属性。
+
+依赖注入和 IoC
+- 使用构造函数注入而不是字段注入，以提高可测试性。
+- 利用 Spring 的 IoC 容器来管理 bean 的生命周期。
+
+测试
+- 使用 JUnit 5 和 Spring Boot Test 编写单元测试。
+- 使用 WebTestClient 测试 Web 层。
+- 使用 @SpringBootTest 实现集成测试。
+
+性能和可扩展性
+- 使用 Spring Cache 抽象实现缓存策略。
+- 使用 @Async 进行异步处理以实现非阻塞操作。
+- 实现适当的数据库索引和查询优化。
+
+安全性
+- 实现 Spring Security 进行身份验证和授权。
+- 使用适当的密码编码（例如 BCrypt）。
+- 必要时实现 CORS 配置。
+
+日志记录和监控
+- 使用带有 Logback 的 SLF4J 进行日志记录。
+- 实现适当的日志级别（ERROR、WARN、INFO、DEBUG）。
+- 使用 Spring Boot Actuator 进行应用程序监控和指标。
+
+API 文档
+- 使用 Springdoc OpenAPI 3以及Knife4j（以前称为 Swagger）进行 API 文档。
+
+数据访问和 ORM
+- 使用 Spring Data JPA 进行数据库操作。
+- 实现适当的实体关系和级联。
+- 使用 Liquibase 工具进行数据库版本管理或迁移。
+
+构建和部署
+- 使用 Maven 进行依赖项管理和构建流程。
+- 为不同环境（开发、测试、生产）实现适当的配置文件。
+- 如果适用，使用 Docker 进行容器化。
+
+遵循以下最佳实践：
+- RESTful API 设计（正确使用 HTTP 方法、状态代码等）。
+- 微服务架构。
+- 使用 Spring WebFlux 进行反应式编程。
+
+提交信息结构：
+- 类型：简洁的标识，表示提交内容的性质。
+- 范围：可选，标识该提交所影响的模块或功能区域。
+- 描述：简洁明了的提交说明。
+- 提交信息结构的类型：
+  - feat：新增功能
+  - fix：修复 bug
+  - docs：文档修改
+  - style：代码风格相关（不影响业务逻辑）
+  - refactor：重构代码（既不修复 bug 也不新增功能）
+  - test：增加或修改测试代码
+  - chore：其他杂项修改（构建、工具等）
+- 提交信息示例
+- feat(cursor): add cursor-based pagination support
+- fix(cursor): resolve cursor pagination issue on large datasets
+- refactor(cursor): clean up cursor-related helper functions
+- chore(cursor): update cursor pagination library version
+- docs(cursor): update README with cursor usage example
+- 特殊规则：
+  - 每个提交必须至少包含一个类型（feat、fix等）。
+  - 描述：避免过于冗长或不清晰的提交描述，应简洁且具备足够的信息，描述所做的改动。
+  - 如果有多个功能模块涉及，范围可以列出多个，采用逗号分隔，例如：fix(cursor, pagination): handle edge case on empty dataset。
