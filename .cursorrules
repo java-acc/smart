@@ -1,23 +1,15 @@
 您是 Java 编程、Spring Boot、Spring Framework、Maven、JUnit 和相关 Java 技术方面的专家。
 
 代码风格和结构
-- 包名前缀是cn.org.byc，后面的你可以根据模块名称进行命名。
-- 生成代码需要遵循DDD架构模式，同时根据项目路径，生成对应的代码，生成对应的聚合根，领域事件，领域服务，领域仓储，领域事件监听器，领域事件发布器等等。
 - 使用准确的 Spring Boot 示例编写干净、高效且文档齐全的 Java 代码。
 - 在整个代码中使用 Spring Boot 最佳实践和约定。
 - 创建 Web 服务时实现 RESTful API 设计模式。
-- 遵循 Jakarta EE 和 MicroProfile 约定，确保包组织清晰。
 - 遵循 camelCase 约定使用描述性方法和变量名称。
 - 构建 Spring Boot 应用程序：控制器、服务、存储库、模型、配置。
-- 使用一致的组织结构构建您的应用程序（例如，资源、服务、存储库、实体、配置）。
-- 属性和方法需要有对应的Java Doc注释，注释需要使用中文。
-- 在必要的地方使用代码行注释，代码行注释位于对应代码行的上方。
-- 在需要日志的情况下使用Slf4j，并且打印对应级别的日志。
 
 Spring Boot 细节
-- 所有接口都使用Spring WebFlux
 - 使用 Spring Boot 启动器快速设置项目和管理依赖项。
-- 正确使用注解（例如 @SpringBootApplication、@RestController、@Service）。
+- 正确使用注释（例如 @SpringBootApplication、@RestController、@Service）。
 - 有效利用 Spring Boot 的自动配置功能。
 - 使用 @ControllerAdvice 和 @ExceptionHandler 实现正确的异常处理。
 
@@ -43,8 +35,9 @@ Java 和 Spring Boot 用法
 
 测试
 - 使用 JUnit 5 和 Spring Boot Test 编写单元测试。
-- 使用 WebTestClient 测试 Web 层。
+- 使用 MockMvc 测试 Web 层。
 - 使用 @SpringBootTest 实现集成测试。
+- 使用 @DataJpaTest 进行存储库层测试。
 
 性能和可扩展性
 - 使用 Spring Cache 抽象实现缓存策略。
@@ -57,17 +50,17 @@ Java 和 Spring Boot 用法
 - 必要时实现 CORS 配置。
 
 日志记录和监控
-- 使用带有 Logback 的 SLF4J 进行日志记录。
+- 使用 SLF4J 和 Logback 进行日志记录。
 - 实现适当的日志级别（ERROR、WARN、INFO、DEBUG）。
 - 使用 Spring Boot Actuator 进行应用程序监控和指标。
 
 API 文档
-- 使用 Springdoc OpenAPI 3以及Knife4j（以前称为 Swagger）进行 API 文档。
+- 使用 Springdoc OpenAPI（以前称为 Swagger）进行 API 文档。
 
 数据访问和 ORM
 - 使用 Spring Data JPA 进行数据库操作。
 - 实现适当的实体关系和级联。
-- 使用 Liquibase 工具进行数据库版本管理或迁移。
+- 使用 Liquibase 工具进行数据库迁移。
 
 构建和部署
 - 使用 Maven 进行依赖项管理和构建流程。
@@ -76,28 +69,99 @@ API 文档
 
 遵循以下最佳实践：
 - RESTful API 设计（正确使用 HTTP 方法、状态代码等）。
-- 微服务架构。
-- 使用 Spring WebFlux 进行反应式编程。
+- 微服务架构（如果适用）。
+- 使用 Spring 的 @Async 进行异步处理或使用 Spring WebFlux 进行反应式编程。
 
-提交信息结构：
-- 类型：简洁的标识，表示提交内容的性质。
-- 范围：可选，标识该提交所影响的模块或功能区域。
-- 描述：简洁明了的提交说明。
-- 提交信息结构的类型：
-  - feat：新增功能
-  - fix：修复 bug
-  - docs：文档修改
-  - style：代码风格相关（不影响业务逻辑）
-  - refactor：重构代码（既不修复 bug 也不新增功能）
-  - test：增加或修改测试代码
-  - chore：其他杂项修改（构建、工具等）
-- 提交信息示例
-- feat(cursor): add cursor-based pagination support
-- fix(cursor): resolve cursor pagination issue on large datasets
-- refactor(cursor): clean up cursor-related helper functions
-- chore(cursor): update cursor pagination library version
-- docs(cursor): update README with cursor usage example
-- 特殊规则：
-  - 每个提交必须至少包含一个类型（feat、fix等）。
-  - 描述：避免过于冗长或不清晰的提交描述，应简洁且具备足够的信息，描述所做的改动。
-  - 如果有多个功能模块涉及，范围可以列出多个，采用逗号分隔，例如：fix(cursor, pagination): handle edge case on empty dataset。
+应用程序逻辑设计：
+- 所有请求和响应处理都必须仅在 RestController 中完成。
+- 所有数据库操作逻辑都必须在 ServiceImpl 类中完成，这些类必须使用 Repositories 提供的方法。
+- RestControllers 不能直接自动连接 Repositories，除非这样做绝对有益。
+- ServiceImpl 类不能直接查询数据库，必须使用 Repositories 方法，除非绝对必要。
+- RestControllers 和 serviceImpl 类之间的数据传输（反之亦然）必须仅使用 DTO 完成。
+- 实体类必须仅用于将数据从数据库查询执行中传输出去。
+
+实体
+- 必须使用 @Entity 注释实体类。
+- 必须使用 @Data（来自 Lombok）注释实体类，除非提示中另有规定。
+- 必须使用 @Id 和 @GeneratedValue（strategy=GenerationType.IDENTITY）注释实体 ID。
+- 必须使用 FetchType.LAZY 来处理关系，除非提示中另有规定。
+- 根据最佳实践正确注释实体属性，例如 @Size、@NotEmpty、@Email 等。
+
+存储库 (DAO)：
+- 必须使用 @Repository 注释存储库类。
+- 存储库类必须是接口类型。
+- 必须使用实体和实体 ID 作为参数扩展 JpaRepository，除非在提示中另有说明。
+- 必须对所有 @Query 类型的方法使用 JPQL，除非在提示中另有说明。
+- 必须在关系查询中使用 @EntityGraph(attributePaths={"relatedEntity"}) 以避免 N+1 问题。
+- 必须使用 DTO 作为使用 @Query 进行多连接查询的数据容器。
+
+服务：
+- 服务类必须是接口类型。
+- 所有服务类方法实现都必须在实现服务类的 ServiceImpl 类中，
+- 所有 ServiceImpl 类都必须使用 @Service 注释。
+- 除非另有说明，否则 ServiceImpl 类中的所有依赖项都必须是 @Autowired 且无需构造函数。
+- 除非绝对必要，否则 ServiceImpl 方法的返回对象应该是 DTO，而不是实体类。
+- 对于任何需要检查记录是否存在的逻辑，请使用相应的存储库方法和适当的 .orElseThrow lambda 方法。
+- 对于任何多个连续的数据库执行，必须使用 @Transactional 或 transactionTemplate，以适当者为准。
+
+数据传输对象 (DTo)：
+- 必须是记录类型，除非提示中另有说明。
+- 必须指定紧凑的规范构造函数来验证输入参数数据（不为 null、空白等，视情况而定）。
+
+RestController：
+- 必须使用 @RestController 注释控制器类。
+- 必须使用 @RequestMapping 指定类级 API 路由，例如 ("/api/user")。
+- 类方法必须使用最佳实践 HTTP 方法注释，例如 create = @postMapping("/create") 等。
+- 类方法中的所有依赖项都必须是 @Autowired，没有构造函数，除非另有说明。
+- 方法返回的对象必须是 Result 类型的 Response Entity 类型。
+- 所有类方法逻辑都必须在 try..catch 块中实现。
+- catch 块中捕获的错误必须由自定义 GlobalExceptionHandler 类处理。
+
+Result 类 (/Result.java):
+public class Result<T> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private int status;
+    private String code;
+    private String message;
+    private String traceId = MDC.get(ApiConstant.TRACE_ID_KEY_HEADER);
+    private T data;
+}
+
+GlobalExceptionHandler 类 (/GlobalExceptionHandler.java)
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Result<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        final Result<Void> result = Result.fail();
+        final String traceId = MDC.get(ApiConstant.TRACE_ID_KEY_HEADER);
+        handleError(result, CommonError.ParamTypeError, cause.getMessage());
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    private void handleValidationException(Result<Void> result, BindingResult bindingResult) {
+        String validationErrors = formatValidationErrors(bindingResult);
+        result.setMessage(StrUtil.format(PARAM_ERROR_MESSAGE_TEMPLATE, validationErrors));
+        result.setStatus(CommonError.RequestParamsInvalid.getStatus());
+        result.setCode(CommonError.RequestParamsInvalid.getCode());
+    }
+
+    private String formatValidationErrors(final BindingResult result) {
+        if (!result.hasErrors()) {
+            return "";
+        }
+
+        return result.getFieldErrors().stream()
+            .map(error -> error.getField() + StringPool.COLON + error.getDefaultMessage())
+            .collect(Collectors.joining(StringPool.SEMICOLON));
+    }
+
+    private void handleError(Result<Void> result, CommonError error, String message) {
+            result.setMessage(StrUtil.format(ERROR_MESSAGE_TEMPLATE, message));
+            result.setCode(error.getCode());
+            result.setStatus(error.getStatus());
+    }
+}
+遵守 SOLID 原则并在 Spring Boot 应用程序设计中保持高内聚和低耦合。
