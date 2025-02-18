@@ -29,7 +29,7 @@ import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Schedule项目的通用类型转换器
+ * 项目的通用类型转换器
  * 
  * <p>该转换器主要用于对象属性的类型转换，支持以下功能：
  * <ul>

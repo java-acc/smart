@@ -21,7 +21,7 @@ import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.util.StringValueResolver;
 
 /**
- * Schedule项目的类型转换服务
+ * 项目的类型转换服务
  * 
  * <p>该服务扩展了Spring Boot的ApplicationConversionService，主要提供以下功能：
  * <ul>
@@ -77,12 +77,12 @@ public class SmartConversionService extends ApplicationConversionService {
     }
 
     /**
-     * 获取ScheduleConversionService的单例实例
+     * 获取ConversionService的单例实例
      * 采用延迟加载策略，在首次调用时才创建实例
      * 
      * <p>该方法是线程安全的，可以在多线程环境下使用
      *
-     * @return 返回GenericConversionService类型的转换服务实例，实际上是ScheduleConversionService的实例
+     * @return 返回GenericConversionService类型的转换服务实例，实际上是ConversionService的实例
      */
     public static GenericConversionService getInstance() {
         return Holder.INSTANCE;
