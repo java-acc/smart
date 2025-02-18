@@ -15,6 +15,7 @@
         <module>smart-knife4j-starter</module>
         <module>smart-exception-starter</module>
         <module>smart-i18n-starter</module>
+        <module>smart-ddd-starter</module>
     </modules>
 
     <url/>
@@ -126,6 +127,16 @@
             <dependency>
                 <groupId>cn.org.byc</groupId>
                 <artifactId>smart-i18n-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.byc.smart</groupId>
+                <artifactId>smart-knife4j-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.byc</groupId>
+                <artifactId>smart-ddd-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <!-- smart end -->
