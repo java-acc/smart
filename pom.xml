@@ -13,6 +13,7 @@
     <modules>
         <module>smart-tool</module>
         <module>smart-knife4j-starter</module>
+        <module>smart-exception-starter</module>
     </modules>
 
     <url/>
@@ -74,6 +75,7 @@
         <knife4j.version>4.5.0</knife4j.version>
         <swagger.version>2.2.19</swagger.version>
 
+
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <maven.test.skip>false</maven.test.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
@@ -109,6 +111,23 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- smart start -->
+            <dependency>
+                <groupId>cn.org.byc</groupId>
+                <artifactId>smart-tool</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.byc</groupId>
+                <artifactId>smart-exception-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.byc</groupId>
+                <artifactId>smart-i18n-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <!-- smart end -->
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
