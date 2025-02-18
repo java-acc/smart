@@ -76,7 +76,7 @@ public class Result<T> implements Serializable {
     /**
      * 请求追踪ID
      */
-    private String traceId = MDC.get(ApiConstant.TRACE_ID_KEY_HEADER);
+    private String traceId = MDC.get(ApiConstant.TRACE_ID_HEADER_KEY);
 
     /**
      * 响应数据

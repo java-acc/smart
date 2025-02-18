@@ -37,6 +37,9 @@ public interface ApiConstant {
      *
      * <p>格式：X-Trace-Id
      */
-    String TRACE_ID_KEY_HEADER = "X-Trace-Id";
+    String TRACE_ID_HEADER_KEY = "X-Trace-Id";
+
+    String USER_ID_HEADER_KEY = "X-User-Id";
+    String USER_NAME_HEADER_KEY = "X-User-Name";
 }
 
