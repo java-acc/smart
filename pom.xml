@@ -14,6 +14,7 @@
         <module>smart-tool</module>
         <module>smart-knife4j-starter</module>
         <module>smart-exception-starter</module>
+        <module>smart-i18n-starter</module>
     </modules>
 
     <url/>
