@@ -70,7 +70,7 @@ API 文档
 遵循以下最佳实践：
 - RESTful API 设计（正确使用 HTTP 方法、状态代码等）。
 - 微服务架构（如果适用）。
-- 使用 Spring 的 @Async 进行异步处理或使用 Spring WebFlux 进行反应式编程。
+- 使用 Spring 的 @Async 进行异步处理。
 
 应用程序逻辑设计：
 - 所有请求和响应处理都必须仅在 RestController 中完成。

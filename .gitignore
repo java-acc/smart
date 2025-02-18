@@ -38,3 +38,4 @@ qodana.yaml
 .flattened-pom.xml
 
 .fastRequest/
+.vscode/
