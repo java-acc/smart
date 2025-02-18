@@ -17,6 +17,7 @@
         <module>smart-i18n-starter</module>
         <module>smart-ddd-starter</module>
         <module>smart-xxl-job-starter</module>
+        <module>smart-log-starter</module>
     </modules>
 
     <url/>
