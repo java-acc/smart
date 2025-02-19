@@ -16,7 +16,7 @@
 
 package cn.org.byc.smart.ddd.event;
 
-import cn.org.byc.schedule.base.id.IdFactory;
+import cn.org.byc.smart.tool.id.IdFactory;
 
 import java.io.Serial;
 import java.io.Serializable;
