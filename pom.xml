@@ -18,6 +18,7 @@
         <module>smart-ddd-starter</module>
         <module>smart-xxl-job-starter</module>
         <module>smart-log-starter</module>
+        <module>smart-oss-starter</module>
     </modules>
 
     <url/>
@@ -78,6 +79,11 @@
         <knife4j.version>4.5.0</knife4j.version>
         <swagger.version>2.2.19</swagger.version>
         <xxl-job.version>3.0.0</xxl-job.version>
+        <oss.qiniu.version>7.18.0</oss.qiniu.version>
+        <oss.aliyun.version>3.18.1</oss.aliyun.version>
+        <oss.tencent.version>5.6.242</oss.tencent.version>
+        <oss.tencent.sts.version>3.1.1</oss.tencent.sts.version>
+        <oss.aws.sdk.version>2.30.22</oss.aws.sdk.version>
 
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <maven.test.skip>false</maven.test.skip>
@@ -145,6 +151,11 @@
                 <artifactId>smart-xxl-job-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.org.byc</groupId>
+                <artifactId>smart-oss-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
             <!-- smart end -->
             <dependency>
                 <groupId>com.mysql</groupId>
@@ -205,6 +216,8 @@
                 <artifactId>p6spy</artifactId>
                 <version>${p6spy.version}</version>
             </dependency>
+
+            <!-- swagger start-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-ui</artifactId>
@@ -220,11 +233,68 @@
                 <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+            <!-- swagger end -->
+
             <dependency>
                 <groupId>com.xuxueli</groupId>
                 <artifactId>xxl-job-core</artifactId>
                 <version>${xxl-job.version}</version>
             </dependency>
+            <!-- oss start -->
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${oss.qiniu.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${oss.aliyun.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <!-- no more than 2.3.3-->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos_api</artifactId>
+                <version>${oss.tencent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos-sts_api</artifactId>
+                <version>${oss.tencent.sts.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${oss.aws.sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>sts</artifactId>
+                <version>${oss.aws.sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>iam</artifactId>
+                <version>${oss.aws.sdk.version}</version>
+            </dependency>
+            <!-- oss end -->
         </dependencies>
     </dependencyManagement>
 
