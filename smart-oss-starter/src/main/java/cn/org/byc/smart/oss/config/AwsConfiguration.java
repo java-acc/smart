@@ -20,32 +20,29 @@ import cn.org.byc.smart.oss.props.OssProperties;
 import cn.org.byc.smart.oss.rule.DefaultOssRule;
 import cn.org.byc.smart.oss.rule.OssRule;
 import cn.org.byc.smart.oss.rule.TenantOssRule;
-import cn.org.byc.smart.oss.template.QiNiuOssTemplate;
-import com.qiniu.storage.BucketManager;
-import com.qiniu.storage.Region;
-import com.qiniu.storage.UploadManager;
-import com.qiniu.util.Auth;
+import cn.org.byc.smart.oss.template.AwsOssTemplate;
+import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration(proxyBeanMethods = false)
+@AllArgsConstructor
+@AutoConfigureAfter(QiNiuConfiguration.class)
 @EnableConfigurationProperties(OssProperties.class)
-@ConditionalOnProperty(value = "smart.oss.name", havingValue = "qiniu")
-public class QiNiuConfiguration {
-    private final OssProperties ossProperties;
-
-    public QiNiuConfiguration(OssProperties ossProperties) {
-        this.ossProperties = ossProperties;
-    }
+@ConditionalOnProperty(value = "smart.oss.name", havingValue = "aws")
+public class AwsConfiguration {
+    private OssProperties ossProperties;
 
     @Bean
     @ConditionalOnMissingBean(OssRule.class)
     @ConditionalOnProperty(value = "smart.oss.tenantMode", havingValue = "false", matchIfMissing = true)
-    public OssRule ossRule(){
+    public OssRule ossRule() {
         return new DefaultOssRule();
     }
 
@@ -57,32 +54,16 @@ public class QiNiuConfiguration {
     }
 
     @Bean
-    public com.qiniu.storage.Configuration qiniuConfiguration() {
-        return new com.qiniu.storage.Configuration(Region.autoRegion());
+    @ConditionalOnMissingBean(S3Client.class)
+    public S3Client amazonS3() {
+        return S3Client.builder().build();
     }
 
     @Bean
-    public Auth auth() {
-        return Auth.create(ossProperties.getAccessKey(), ossProperties.getSecretKey());
-    }
-
-    @Bean
-    @ConditionalOnBean(com.qiniu.storage.Configuration.class)
-    public UploadManager uploadManager(com.qiniu.storage.Configuration cfg) {
-        return new UploadManager(cfg);
-    }
-
-    @Bean
-    @ConditionalOnBean(com.qiniu.storage.Configuration.class)
-    public BucketManager bucketManager(com.qiniu.storage.Configuration cfg) {
-        return new BucketManager(Auth.create(ossProperties.getAccessKey(), ossProperties.getSecretKey()), cfg);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(QiNiuOssTemplate.class)
-    @ConditionalOnBean({Auth.class, UploadManager.class, BucketManager.class, OssRule.class})
-    public QiNiuOssTemplate qiniuTemplate(Auth auth, UploadManager uploadManager, BucketManager bucketManager, OssRule ossRule) {
-        return new QiNiuOssTemplate(auth, uploadManager, bucketManager, ossProperties, ossRule);
+    @ConditionalOnMissingBean(AwsOssTemplate.class)
+    @ConditionalOnBean({S3Client.class, OssRule.class})
+    public AwsOssTemplate tencentCosTemplate(S3Client ossClient, OssRule ossRule) {
+        return new AwsOssTemplate(ossClient, ossProperties, ossRule);
     }
 
 }

@@ -39,14 +39,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class QiNiuTemplate {
+public class QiNiuOssTemplate {
     private Auth auth;
     private UploadManager uploadManager;
     private BucketManager bucketManager;
     private OssProperties ossProperties;
     private OssRule ossRule;
 
-    public QiNiuTemplate(Auth auth, UploadManager uploadManager, BucketManager bucketManager, OssProperties ossProperties, OssRule ossRule) {
+    public QiNiuOssTemplate(Auth auth, UploadManager uploadManager, BucketManager bucketManager, OssProperties ossProperties, OssRule ossRule) {
         this.auth = auth;
         this.uploadManager = uploadManager;
         this.bucketManager = bucketManager;
