@@ -19,7 +19,7 @@ package cn.org.byc.smart.tool.convert;
 import cn.hutool.core.util.ReflectUtil;
 import cn.org.byc.smart.tool.supports.Try;
 import cn.org.byc.smart.tool.utils.ClassUtil;
-import cn.org.byc.smart.tool.utils.ConvertUtils;
+import cn.org.byc.smart.tool.utils.ConvertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.core.Converter;
@@ -29,34 +29,56 @@ import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 项目的通用类型转换器
+ * 智能Bean属性转换器
  * 
- * <p>该转换器主要用于对象属性的类型转换，支持以下功能：
+ * <p>该转换器主要用于对象属性的类型转换，是对CGLib BeanCopier的增强实现。主要功能：
  * <ul>
- *     <li>基于字段名称的类型转换</li>
- *     <li>支持缓存字段类型描述符，提高性能</li>
- *     <li>支持空值处理</li>
- *     <li>支持类型兼容性检查</li>
+ *   <li>基于字段名称的类型转换</li>
+ *   <li>支持缓存字段类型描述符，提高性能</li>
+ *   <li>支持空值处理</li>
+ *   <li>支持类型兼容性检查</li>
  * </ul>
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * // 1. 创建转换器实例
+ * SmartConvert converter = new SmartConvert(TargetClass.class);
  * 
- * <p>使用场景：
+ * // 2. 在BeanCopier中使用
+ * BeanCopier copier = BeanCopier.create(SourceClass.class, TargetClass.class, true);
+ * TargetClass target = new TargetClass();
+ * copier.copy(source, target, converter);
+ * 
+ * // 3. 类型转换示例
+ * // 源类
+ * public class Source {
+ *     private String age = "25";
+ * }
+ * // 目标类
+ * public class Target {
+ *     private Integer age;
+ * }
+ * // 转换过程会自动将String类型的age转换为Integer类型
+ * }</pre>
+ *
+ * <p>特点：
  * <ul>
- *     <li>对象拷贝时的属性类型转换</li>
- *     <li>CGLib BeanCopier 的类型转换器</li>
- *     <li>其他需要字段级别类型转换的场景</li>
+ *   <li>支持不同类型属性间的自动转换</li>
+ *   <li>使用类型描述符缓存提升性能</li>
+ *   <li>支持链式属性转换</li>
+ *   <li>线程安全</li>
  * </ul>
  *
  * @author Ken
  * @see org.springframework.cglib.core.Converter
- * @see org.springframework.core.convert.TypeDescriptor
+ * @see org.springframework.cglib.beans.BeanCopier
  */
 public class SmartConvert implements Converter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SmartConvert.class);
 
     /**
      * 类型描述符缓存
-     * 键：类名 + 字段名
-     * 值：字段的类型描述符
+     * <p>使用ConcurrentHashMap实现线程安全的缓存，键为"类名+字段名"，值为字段的类型描述符
      */
     private static final ConcurrentHashMap<String, TypeDescriptor> TYPE_CACHE = new ConcurrentHashMap<>(8);
 
@@ -83,10 +105,17 @@ public class SmartConvert implements Converter {
      * 
      * <p>转换规则：
      * <ul>
-     *     <li>如果源值为null，返回null</li>
-     *     <li>如果源值类型与目标类型兼容，直接返回源值</li>
-     *     <li>否则，使用类型转换服务进行转换</li>
+     *   <li>如果源值为null，返回null</li>
+     *   <li>如果源值类型与目标类型兼容，直接返回源值</li>
+     *   <li>否则，使用类型转换服务进行转换</li>
      * </ul>
+     *
+     * <p>使用示例：
+     * <pre>{@code
+     * SmartConvert converter = new SmartConvert(TargetClass.class);
+     * Object result = converter.convert("123", Integer.class, "age");
+     * // result 将是 Integer 类型的 123
+     * }</pre>
      *
      * @param value 源值
      * @param target 目标类型
@@ -113,7 +142,7 @@ public class SmartConvert implements Converter {
 
         // 获取目标类型的类型描述符并进行转换
         TypeDescriptor targetDescriptor = getTypeDescriptor(targetClazz, (String) fieldName);
-        return ConvertUtils.convert(value, targetDescriptor);
+        return ConvertUtil.convert(value, targetDescriptor);
     }
 
     /**

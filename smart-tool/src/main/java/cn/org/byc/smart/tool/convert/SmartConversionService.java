@@ -21,40 +21,65 @@ import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.util.StringValueResolver;
 
 /**
- * 项目的类型转换服务
+ * 智能类型转换服务
  * 
- * <p>该服务扩展了Spring Boot的ApplicationConversionService，主要提供以下功能：
+ * <p>该服务扩展了Spring Boot的{@link ApplicationConversionService}，提供以下增强功能：
  * <ul>
- *     <li>统一的类型转换服务，支持各种类型之间的转换</li>
- *     <li>自定义的枚举转换器，支持字符串与枚举之间的双向转换</li>
- *     <li>支持Spring配置文件中的占位符解析</li>
+ *   <li>统一的类型转换服务，支持各种类型之间的转换</li>
+ *   <li>自定义的枚举转换器，支持字符串与枚举之间的双向转换</li>
+ *   <li>支持Spring配置文件中的占位符解析</li>
  * </ul>
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * // 1. 获取全局实例
+ * GenericConversionService conversionService = SmartConversionService.getInstance();
  * 
- * <p>该服务采用单例模式实现，确保全局使用同一个转换服务实例。
- * 使用方式：
+ * // 2. 执行类型转换
+ * String strValue = "123";
+ * Integer intValue = conversionService.convert(strValue, Integer.class);
+ * 
+ * // 3. 枚举转换
+ * public enum Status {
+ *     ACTIVE, INACTIVE
+ * }
+ * String enumStr = conversionService.convert(Status.ACTIVE, String.class);
+ * Status status = conversionService.convert("ACTIVE", Status.class);
+ * 
+ * // 4. 创建自定义实例
+ * StringValueResolver resolver = new PropertySourcesPlaceholderConfigurer();
+ * SmartConversionService customService = new SmartConversionService(resolver);
+ * }</pre>
+ *
+ * <p>特点：
  * <ul>
- *     <li>通过getInstance()获取全局实例</li>
- *     <li>通过构造函数创建自定义实例</li>
+ *   <li>采用单例模式，确保全局使用同一个转换服务实例</li>
+ *   <li>支持自定义字符串值解析器</li>
+ *   <li>内置常用类型转换器</li>
+ *   <li>线程安全</li>
  * </ul>
  *
  * @author Ken
+ * @see ApplicationConversionService
  * @see EnumToStringConverter
  * @see StringToEnumConverter
- * @see ApplicationConversionService
  */
 public class SmartConversionService extends ApplicationConversionService {
+    
     /**
      * 静态内部类，用于实现延迟加载的单例模式
-     * 利用类加载机制确保线程安全
+     * <p>利用类加载机制确保线程安全
      */
     private static class Holder {
-        // 创建单例实例，使用默认构造函数
+        /**
+         * 创建单例实例，使用默认构造函数
+         */
         static final SmartConversionService INSTANCE = new SmartConversionService();
     }
 
     /**
      * 默认构造函数
-     * 初始化转换服务并添加自定义的枚举转换器
+     * <p>初始化转换服务并添加自定义的枚举转换器
      */
     public SmartConversionService() {
         super();
@@ -65,7 +90,7 @@ public class SmartConversionService extends ApplicationConversionService {
 
     /**
      * 带有字符串值解析器的构造函数
-     * 初始化转换服务并添加自定义的枚举转换器
+     * <p>初始化转换服务并添加自定义的枚举转换器
      *
      * @param embeddedValueResolver Spring的字符串值解析器，用于解析配置文件中的占位符
      */
@@ -78,11 +103,16 @@ public class SmartConversionService extends ApplicationConversionService {
 
     /**
      * 获取ConversionService的单例实例
-     * 采用延迟加载策略，在首次调用时才创建实例
-     * 
-     * <p>该方法是线程安全的，可以在多线程环境下使用
+     * <p>采用延迟加载策略，在首次调用时才创建实例。
+     * 该方法是线程安全的，可以在多线程环境下使用。
      *
-     * @return 返回GenericConversionService类型的转换服务实例，实际上是ConversionService的实例
+     * <p>使用示例：
+     * <pre>{@code
+     * GenericConversionService conversionService = SmartConversionService.getInstance();
+     * Integer result = conversionService.convert("123", Integer.class);
+     * }</pre>
+     *
+     * @return 返回GenericConversionService类型的转换服务实例
      */
     public static GenericConversionService getInstance() {
         return Holder.INSTANCE;

@@ -17,49 +17,74 @@
 package cn.org.byc.smart.tool.constant;
 
 /**
- * 字符串常量池接口，提供系统中所有通用的字符串常量定义
+ * 字符串常量池接口
  * 
- * <p>该接口的主要目的是：
+ * <p>该接口定义了系统中所有通用的字符串常量,包括:
  * <ul>
- *     <li>集中管理系统中常用的字符串常量，避免字符串字面量的重复定义</li>
- *     <li>提高字符串常量的复用性，减少内存占用</li>
- *     <li>统一字符串常量的命名和使用方式，提高代码可维护性</li>
- *     <li>防止字符串常量拼写错误，提高代码质量</li>
+ *   <li>基本符号: &, @, *, /, \, :, 等</li>
+ *   <li>括号: (), [], {}, <></li>
+ *   <li>空值和布尔值: "", null, true, false</li>
+ *   <li>特殊字符: 换行符、回车符、制表符等</li>
+ *   <li>HTTP方法: GET, POST, PUT, DELETE等</li>
+ *   <li>字符编码: UTF-8, GBK, ISO-8859-1</li>
+ *   <li>JSON相关: 空JSON对象、数组等</li>
  * </ul>
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * // 使用基本符号
+ * String path = name + StringPool.SLASH + id;
  * 
- * <p>常量分类：
+ * // 使用括号
+ * String expr = StringPool.LEFT_BRACE + value + StringPool.RIGHT_BRACE;
+ * 
+ * // 使用HTTP方法
+ * if(StringPool.GET.equals(method)) {
+ *   // 处理GET请求
+ * }
+ * 
+ * // 使用字符编码
+ * byte[] bytes = string.getBytes(StringPool.UTF_8);
+ * }</pre>
+ *
+ * <p>优点:
  * <ul>
- *     <li>基本符号：包含常用的标点符号、运算符等</li>
- *     <li>括号相关：包含各种类型的括号及其配对符号</li>
- *     <li>空值和布尔值：包含空字符串、null值、布尔值等</li>
- *     <li>特殊字符：包含换行符、回车符、制表符等</li>
- *     <li>字符编码：包含常用的字符编码标识</li>
- *     <li>HTTP方法：包含标准的HTTP请求方法</li>
- *     <li>JSON相关：包含JSON格式的特殊值</li>
+ *   <li>统一管理系统中的字符串常量,避免重复定义</li>
+ *   <li>提高字符串常量复用性,减少内存占用</li>
+ *   <li>统一命名规范,提高代码可维护性</li>
+ *   <li>防止字符串拼写错误</li>
  * </ul>
- * 
- * <p>使用建议：
- * <ul>
- *     <li>优先使用本接口定义的常量，而不是字面量</li>
- *     <li>当需要新增常量时，应按照对应的分类添加</li>
- *     <li>常量命名应该清晰明确，避免歧义</li>
- * </ul>
- * 
+ *
  * @author Ken
  * @see java.lang.String
  * @see org.springframework.util.StringUtils
  */
 public interface StringPool {
     // 基本符号
-    /** 符号：& */
+    /**
+     * 符号: &
+     * <p>常用于URL参数连接和XML转义
+     */
     String AMPERSAND         = "&";
-    /** 单词：and */
+    /**
+     * 单词: and
+     * <p>常用于SQL语句中的条件连接
+     */
     String AND               = "and";
-    /** 符号：@ */
+    /**
+     * 符号: @
+     * <p>常用于Java注解标记和邮件地址
+     */
     String AT                = "@";
-    /** 符号：* */
+    /**
+     * 符号: *
+     * <p>常用于通配符匹配
+     */
     String ASTERISK          = "*";
-    /** 符号：*的别名 */
+    /**
+     * 符号: * 的别名
+     * <p>与{@link #ASTERISK}相同,提供更直观的命名
+     */
     String STAR              = ASTERISK;
     /** 符号：/ */
     String SLASH             = "/";
@@ -197,9 +222,29 @@ public interface StringPool {
     String UNKNOWN           = "unknown";
 
     // HTTP方法
-    /** HTTP GET方法 */
+    /**
+     * HTTP GET方法
+     * <p>用于从服务器获取资源
+     * 
+     * <p>使用示例:
+     * <pre>{@code
+     * if(StringPool.GET.equals(request.getMethod())) {
+     *   // 处理GET请求
+     * }
+     * }</pre>
+     */
     String GET               = "GET";
-    /** HTTP POST方法 */
+    /**
+     * HTTP POST方法
+     * <p>用于向服务器提交数据
+     * 
+     * <p>使用示例:
+     * <pre>{@code
+     * if(StringPool.POST.equals(request.getMethod())) {
+     *   // 处理POST请求
+     * }
+     * }</pre>
+     */
     String POST              = "POST";
     /** HTTP PUT方法 */
     String PUT               = "PUT";
@@ -217,8 +262,26 @@ public interface StringPool {
     String CONNECT           = "CONNECT";
 
     // JSON相关
-    /** 空JSON数组 */
+    /**
+     * 空JSON数组字符串: []
+     * <p>表示一个空的JSON数组
+     * 
+     * <p>使用示例:
+     * <pre>{@code
+     * String emptyArray = StringPool.EMPTY_JSON_ARRAY;
+     * // 输出: []
+     * }</pre>
+     */
     String EMPTY_JSON_ARRAY  = "[]";
-    /** 空JSON对象 */
+    /**
+     * 空JSON对象字符串: {}
+     * <p>表示一个空的JSON对象
+     * 
+     * <p>使用示例:
+     * <pre>{@code
+     * String emptyObject = StringPool.EMPTY_JSON_OBJECT;
+     * // 输出: {}
+     * }</pre>
+     */
     String EMPTY_JSON_OBJECT = "{}";
 }

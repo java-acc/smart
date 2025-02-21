@@ -16,7 +16,7 @@
 
 package cn.org.byc.smart.tool.convert;
 
-import cn.org.byc.smart.tool.utils.ConvertUtils;
+import cn.org.byc.smart.tool.utils.ConvertUtil;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,29 +37,65 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 字符串到枚举类型的转换器
- * 支持将字符串转换为对应的枚举类型
- * 转换规则：
- * 1. 优先使用带有@JsonCreator注解的构造函数或方法进行转换
- * 2. 如果没有@JsonCreator注解，则使用枚举的valueOf方法进行转换
- * 3. 使用ConcurrentHashMap缓存注解信息，提高性能
+ * 
+ * <p>该转换器支持将字符串转换为对应的枚举类型。转换规则如下:
+ * <ul>
+ *   <li>优先使用带有{@link JsonCreator}注解的构造函数或方法进行转换</li>
+ *   <li>如果没有{@link JsonCreator}注解，则使用枚举的valueOf方法进行转换</li>
+ *   <li>使用ConcurrentHashMap缓存注解信息，提高性能</li>
+ * </ul>
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * // 1. 定义枚举类
+ * public enum Status {
+ *     ACTIVE("A"),
+ *     INACTIVE("I");
+ *     
+ *     private final String code;
+ *     
+ *     Status(String code) {
+ *         this.code = code;
+ *     }
+ *     
+ *     @JsonCreator
+ *     public static Status fromCode(String code) {
+ *         for (Status status : values()) {
+ *             if (status.code.equals(code)) {
+ *                 return status;
+ *             }
+ *         }
+ *         throw new IllegalArgumentException("Invalid status code: " + code);
+ *     }
+ * }
+ * 
+ * // 2. 使用转换器
+ * StringToEnumConverter converter = new StringToEnumConverter();
+ * Status result = (Status) converter.convert("A", 
+ *                         TypeDescriptor.valueOf(String.class),
+ *                         TypeDescriptor.valueOf(Status.class));
+ * // result 将等于 Status.ACTIVE
+ * }</pre>
  *
  * @author Ken
+ * @see ConditionalGenericConverter
+ * @see JsonCreator
  */
 public class StringToEnumConverter implements ConditionalGenericConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringToEnumConverter.class);
     
     /**
      * 枚举类型的注解缓存
-     * 缓存@JsonCreator注解的Constructor或Method对象
+     * <p>缓存{@link JsonCreator}注解的Constructor或Method对象
      * 使用ConcurrentHashMap实现线程安全的缓存
      */
     private static final ConcurrentMap<Class<?>, AccessibleObject> ENUM_CACHE_MAP = new ConcurrentHashMap<>(8);
 
     /**
-     * 获取类中带有@JsonCreator注解的构造函数或方法
+     * 获取类中带有{@link JsonCreator}注解的构造函数或方法
      * 
      * @param clazz 要检查的类
-     * @return 带有@JsonCreator注解的Constructor或Method对象，如果没有找到则返回null
+     * @return 带有{@link JsonCreator}注解的Constructor或Method对象，如果没有找到则返回null
      */
     @Nullable
     private static AccessibleObject getAnnotation(Class<?> clazz) {
@@ -83,7 +119,7 @@ public class StringToEnumConverter implements ConditionalGenericConverter {
 
     /**
      * 判断是否可以进行转换
-     * 本转换器支持所有字符串到枚举类型的转换
+     * <p>本转换器支持所有字符串到枚举类型的转换
      *
      * @param sourceType 源类型描述符
      * @param targetType 目标类型描述符
@@ -96,7 +132,7 @@ public class StringToEnumConverter implements ConditionalGenericConverter {
 
     /**
      * 获取支持的转换类型对
-     * 仅支持String到Enum的转换
+     * <p>仅支持String到Enum的转换
      *
      * @return 支持的转换类型对集合
      */
@@ -163,13 +199,13 @@ public class StringToEnumConverter implements ConditionalGenericConverter {
         if (accessibleObject instanceof Constructor constructor) {
             Class<?> paramType = constructor.getParameterTypes()[0];
             // 类型转换
-            Object object = ConvertUtils.convert(value, paramType);
+            Object object = ConvertUtil.convert(value, paramType);
             return constructor.newInstance(object);
         }
         if (accessibleObject instanceof Method method) {
             Class<?> paramType = method.getParameterTypes()[0];
             // 类型转换
-            Object object = ConvertUtils.convert(value, paramType);
+            Object object = ConvertUtil.convert(value, paramType);
             return method.invoke(clazz, object);
         }
         return null;

@@ -84,6 +84,7 @@
         <oss.tencent.version>5.6.242</oss.tencent.version>
         <oss.tencent.sts.version>3.1.1</oss.tencent.sts.version>
         <oss.aws.sdk.version>2.30.22</oss.aws.sdk.version>
+        <protostuff.version>1.8.0</protostuff.version>
 
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <maven.test.skip>false</maven.test.skip>
@@ -294,7 +295,29 @@
                 <artifactId>iam</artifactId>
                 <version>${oss.aws.sdk.version}</version>
             </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>apache-client</artifactId>
+                <version>${oss.aws.sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>netty-nio-client</artifactId>
+                <version>${oss.aws.sdk.version}</version>
+            </dependency>
             <!-- oss end -->
+
+            <!-- protostuff -->
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

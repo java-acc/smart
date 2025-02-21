@@ -16,7 +16,7 @@
 
 package cn.org.byc.smart.tool.convert;
 
-import cn.org.byc.smart.tool.utils.ConvertUtils;
+import cn.org.byc.smart.tool.utils.ConvertUtil;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -39,13 +39,44 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 枚举类型到字符串的转换器
- * 支持将枚举类型转换为字符串、Integer或Long类型
- * 转换规则：
- * 1. 优先使用带有@JsonValue注解的字段或方法的值进行转换
- * 2. 如果没有@JsonValue注解，则使用枚举的name()方法或ordinal()值进行转换
- * 3. 使用Guava Cache缓存注解信息，提高性能
+ * 
+ * <p>该转换器支持将枚举类型转换为字符串、Integer或Long类型。转换规则如下:
+ * <ul>
+ *   <li>优先使用带有{@link JsonValue}注解的字段或方法的值进行转换</li>
+ *   <li>如果没有{@link JsonValue}注解，则使用枚举的name()方法或ordinal()值进行转换</li>
+ *   <li>使用Guava Cache缓存注解信息，提高性能</li>
+ * </ul>
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * // 1. 定义枚举类
+ * public enum Status {
+ *     @JsonValue
+ *     ACTIVE("A"),
+ *     INACTIVE("I");
+ *     
+ *     private final String code;
+ *     
+ *     Status(String code) {
+ *         this.code = code;
+ *     }
+ *     
+ *     public String getCode() {
+ *         return code;
+ *     }
+ * }
+ * 
+ * // 2. 使用转换器
+ * EnumToStringConverter converter = new EnumToStringConverter();
+ * String result = (String) converter.convert(Status.ACTIVE, 
+ *                          TypeDescriptor.valueOf(Status.class),
+ *                          TypeDescriptor.valueOf(String.class));
+ * // result 将等于 "A"
+ * }</pre>
  *
  * @author Ken
+ * @see ConditionalGenericConverter
+ * @see JsonValue
  */
 public class EnumToStringConverter implements ConditionalGenericConverter {
 
@@ -53,11 +84,12 @@ public class EnumToStringConverter implements ConditionalGenericConverter {
 
     /**
      * 枚举类型的注解缓存
-     * 缓存@JsonValue注解的Field或Method对象
-     * 使用Guava的LoadingCache实现，具有以下特性：
-     * 1. 最大容量300个条目
-     * 2. 访问后1小时过期
-     * 3. 写入后3小时过期
+     * <p>缓存{@link JsonValue}注解的Field或Method对象，使用Guava的LoadingCache实现，具有以下特性:
+     * <ul>
+     *   <li>最大容量300个条目</li>
+     *   <li>访问后1小时过期</li>
+     *   <li>写入后3小时过期</li>
+     * </ul>
      */
     private static final LoadingCache<Class<?>, AccessibleObject> ENUM_CACHE = CacheBuilder.newBuilder()
             .maximumSize(300)
@@ -72,7 +104,7 @@ public class EnumToStringConverter implements ConditionalGenericConverter {
 
     /**
      * 判断是否可以进行转换
-     * 本转换器支持所有枚举类型的转换
+     * <p>本转换器支持所有枚举类型的转换
      *
      * @param sourceType 源类型描述符
      * @param targetType 目标类型描述符
@@ -85,10 +117,12 @@ public class EnumToStringConverter implements ConditionalGenericConverter {
 
     /**
      * 获取支持的转换类型对
-     * 支持以下转换：
-     * 1. Enum -> String
-     * 2. Enum -> Integer
-     * 3. Enum -> Long
+     * <p>支持以下转换:
+     * <ul>
+     *   <li>Enum -> String</li>
+     *   <li>Enum -> Integer</li>
+     *   <li>Enum -> Long</li>
+     * </ul>
      *
      * @return 支持的转换类型对集合
      */
@@ -101,7 +135,7 @@ public class EnumToStringConverter implements ConditionalGenericConverter {
 
     /**
      * 执行转换操作
-     * 
+     *
      * @param source 源对象
      * @param sourceType 源类型描述符
      * @param targetType 目标类型描述符
@@ -126,7 +160,7 @@ public class EnumToStringConverter implements ConditionalGenericConverter {
                 return ((Enum) source).name();
             }
             int ordinal = ((Enum) source).ordinal();
-            return ConvertUtils.convert(ordinal, targetClazz);
+            return ConvertUtil.convert(ordinal, targetClazz);
         }
         try {
             return EnumToStringConverter.invoke(sourceClazz, accessibleObject, source, targetClazz);
@@ -156,20 +190,20 @@ public class EnumToStringConverter implements ConditionalGenericConverter {
         } else if (accessibleObject instanceof Method method) {
             Class<?> paramType = method.getParameterTypes()[0];
             // 类型转换
-            Object object = ConvertUtils.convert(source, paramType);
+            Object object = ConvertUtil.convert(source, paramType);
             value = method.invoke(clazz, object);
         }
         if (value == null) {
             return null;
         }
-        return ConvertUtils.convert(value, targetClazz);
+        return ConvertUtil.convert(value, targetClazz);
     }
 
     /**
-     * 获取类中带有@JsonValue注解的字段或方法
-     * 
+     * 获取类中带有{@link JsonValue}注解的字段或方法
+     *
      * @param clazz 要检查的类
-     * @return 带有@JsonValue注解的Field或Method对象，如果没有找到则返回null
+     * @return 带有{@link JsonValue}注解的Field或Method对象，如果没有找到则返回null
      */
     private static AccessibleObject getAnnotation(Class<?> clazz) {
         Set<AccessibleObject> accessibleObjects = new HashSet<>();

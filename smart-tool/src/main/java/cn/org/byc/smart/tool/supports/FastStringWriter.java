@@ -22,19 +22,46 @@ import org.springframework.lang.Nullable;
 import java.io.Writer;
 
 /**
- * 高性能的字符串写入器，基于StringBuilder实现
- * 相比于StringWriter，该实现更加轻量和高效，不需要同步锁
+ * 高性能字符串写入器
+ * 
+ * <p>基于StringBuilder实现的轻量级字符串写入器，相比于StringWriter具有以下优势：
+ * <ul>
+ *   <li>无需同步锁，性能更高</li>
+ *   <li>更低的内存占用</li>
+ *   <li>支持指定初始容量，减少扩容开销</li>
+ *   <li>支持直接使用现有StringBuilder</li>
+ * </ul>
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * // 1. 使用默认容量创建
+ * FastStringWriter writer = new FastStringWriter();
+ * writer.write("Hello");
+ * writer.append(" World");
+ * String result = writer.toString(); // "Hello World"
+ * 
+ * // 2. 指定初始容量
+ * FastStringWriter writer = new FastStringWriter(256);
+ * 
+ * // 3. 使用现有StringBuilder
+ * StringBuilder builder = new StringBuilder();
+ * FastStringWriter writer = new FastStringWriter(builder);
+ * }</pre>
  *
  * @author Ken
+ * @see Writer
+ * @see StringBuilder
  */
 public class FastStringWriter extends Writer {
-    // 内部使用StringBuilder作为缓冲区
+    
+    // 内部缓冲区，使用StringBuilder存储字符
     private final StringBuilder builder;
 
     /**
      * 创建一个默认容量（64字符）的FastStringWriter
      */
     public FastStringWriter() {
+        // 使用默认容量64创建StringBuilder
         builder = new StringBuilder(64);
     }
 
@@ -48,16 +75,17 @@ public class FastStringWriter extends Writer {
         if (capacity < 0) {
             throw new IllegalArgumentException("Negative builder size");
         }
+        // 使用指定容量创建StringBuilder
         builder = new StringBuilder(capacity);
     }
 
     /**
      * 使用指定的StringBuilder创建FastStringWriter
-     * 如果提供的builder为null，则创建一个新的默认容量（64字符）的StringBuilder
      *
-     * @param builder 指定的StringBuilder，可以为null
+     * @param builder 指定的StringBuilder，如果为null则创建默认容量的新实例
      */
     public FastStringWriter(@Nullable final StringBuilder builder) {
+        // 如果builder为null，创建默认容量的StringBuilder
         this.builder = builder != null ? builder : new StringBuilder(64);
     }
 
@@ -68,6 +96,7 @@ public class FastStringWriter extends Writer {
      */
     @Override
     public void write(int c) {
+        // 将int类型转换为char后追加到builder
         builder.append((char) c);
     }
 
@@ -81,12 +110,16 @@ public class FastStringWriter extends Writer {
      */
     @Override
     public void write(char[] cbuilder, int off, int len) {
+        // 参数验证
         if ((off < 0) || (off > cbuilder.length) || (len < 0) ||
                 ((off + len) > cbuilder.length) || ((off + len) < 0)) {
             throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
+        }
+        // 如果长度为0，直接返回
+        if (len == 0) {
             return;
         }
+        // 追加指定范围的字符数组
         builder.append(cbuilder, off, len);
     }
 
@@ -97,6 +130,7 @@ public class FastStringWriter extends Writer {
      */
     @Override
     public void write(String str) {
+        // 直接追加字符串
         builder.append(str);
     }
 
@@ -109,21 +143,23 @@ public class FastStringWriter extends Writer {
      */
     @Override
     public void write(String str, int off, int len) {
+        // 追加字符串的指定部分
         builder.append(str, off, off + len);
     }
 
     /**
      * 追加字符序列
-     * 如果字符序列为null，则追加"null"字符串
      *
-     * @param csq 要追加的字符序列
+     * @param csq 要追加的字符序列，如果为null则追加"null"
      * @return 当前FastStringWriter实例
      */
     @Override
     public FastStringWriter append(CharSequence csq) {
         if (csq == null) {
+            // 如果字符序列为null，写入"null"字符串
             write(StringPool.NULL);
         } else {
+            // 否则写入字符序列的字符串表示
             write(csq.toString());
         }
         return this;
@@ -131,16 +167,17 @@ public class FastStringWriter extends Writer {
 
     /**
      * 追加字符序列的指定部分
-     * 如果字符序列为null，则使用"null"字符串的指定部分
      *
-     * @param csq 要追加的字符序列
+     * @param csq 要追加的字符序列，如果为null则使用"null"
      * @param start 开始位置
      * @param end 结束位置
      * @return 当前FastStringWriter实例
      */
     @Override
     public FastStringWriter append(CharSequence csq, int start, int end) {
+        // 如果字符序列为null，使用"null"字符串
         CharSequence cs = (csq == null ? StringPool.NULL : csq);
+        // 写入指定范围的子序列
         write(cs.subSequence(start, end).toString());
         return this;
     }
@@ -153,14 +190,15 @@ public class FastStringWriter extends Writer {
      */
     @Override
     public FastStringWriter append(char c) {
+        // 写入单个字符
         write(c);
         return this;
     }
 
     /**
-     * 返回缓冲区中的字符串
+     * 获取当前缓冲区的字符串表示
      *
-     * @return 缓冲区的字符串表示
+     * @return 缓冲区的字符串内容
      */
     @Override
     public String toString() {
@@ -169,19 +207,22 @@ public class FastStringWriter extends Writer {
 
     /**
      * 刷新缓冲区
-     * 由于使用StringBuilder实现，此方法不执行任何操作
+     * <p>此方法不执行任何操作，因为StringBuilder是内存缓冲，无需刷新
      */
     @Override
     public void flush() {
+        // 不需要实现，StringBuilder是内存缓冲
     }
 
     /**
      * 关闭写入器
-     * 清空缓冲区并释放多余的空间
+     * <p>清空缓冲区并释放多余的空间
      */
     @Override
     public void close() {
+        // 清空StringBuilder
         builder.setLength(0);
+        // 释放多余的空间
         builder.trimToSize();
     }
 }
