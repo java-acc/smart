@@ -32,13 +32,14 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
-import software.amazon.awssdk.core.internal.http.loader.DefaultSdkHttpClientBuilder;
+import software.amazon.awssdk.http.SdkHttpClient;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.retries.internal.DefaultAdaptiveRetryStrategy;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.utils.AttributeMap;
 
 import java.net.URI;
+import java.time.Duration;
 
 @Configuration(proxyBeanMethods = false)
 @AllArgsConstructor
@@ -75,8 +76,11 @@ public class AwsConfiguration {
                         .build())
                 .build();
 
-        new DefaultSdkHttpClientBuilder().buildWithDefaults(AttributeMap.builder().build());
+        SdkHttpClient httpClient = ApacheHttpClient.builder()
+                .socketTimeout(Duration.ofMillis(50000))
+                .connectionTimeout(Duration.ofMillis(50000))
 
+                .build();
         return S3Client.builder()
                 .endpointOverride(URI.create(ossProperties.getEndpoint()))
                 .region(Region.CN_NORTH_1)

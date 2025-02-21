@@ -22,21 +22,59 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * 日志拦截器配置类
+ * 
+ * <p>该配置类用于注册日志拦截器，实现Web请求的日志记录功能。
+ * 只有当{@link Interceptor}类存在于类路径时才会启用此配置。
+ *
+ * <p>使用示例:
+ * <pre>{@code
+ * @SpringBootApplication
+ * public class Application {
+ *     public static void main(String[] args) {
+ *         SpringApplication.run(Application.class, args);
+ *     }
+ * }
+ * }</pre>
+ *
+ * @author Ken
+ * @see Interceptor
+ * @see WebMvcConfigurer
+ */
 @Configuration
 @ConditionalOnClass(Interceptor.class)
 public class InterceptorConfig implements WebMvcConfigurer {
 
     private final Interceptor interceptor;
 
+    /**
+     * 构造函数，通过依赖注入获取拦截器实例
+     *
+     * @param interceptor 日志拦截器实例
+     */
     public InterceptorConfig(Interceptor interceptor) {
         this.interceptor = interceptor;
     }
 
+    /**
+     * 创建并配置日志拦截器Bean
+     *
+     * @return 返回新创建的日志拦截器实例
+     */
     @Bean
     public Interceptor interceptor() {
         return new Interceptor();
     }
 
+    /**
+     * 添加拦截器到拦截器注册表中
+     * 
+     * <p>该方法实现了{@link WebMvcConfigurer}接口的addInterceptors方法，
+     * 用于将日志拦截器注册到Spring MVC的拦截器链中。
+     *
+     * @param registry 拦截器注册表
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor);

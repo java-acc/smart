@@ -21,7 +21,7 @@ import cn.org.byc.smart.oss.model.SmartFile;
 import cn.org.byc.smart.oss.props.OssProperties;
 import cn.org.byc.smart.oss.rule.OssRule;
 import cn.org.byc.smart.tool.constant.StringPool;
-import cn.org.byc.smart.tool.utils.JsonUtil;
+import cn.org.byc.smart.tool.jackson.JsonUtil;
 import com.aliyun.oss.HttpMethod;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;

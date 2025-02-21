@@ -16,6 +16,9 @@
 
 package cn.org.byc.smart.ddd.aggregate;
 
+import cn.org.byc.smart.ddd.event.DomainEvent;
+import cn.org.byc.smart.ddd.event.DomainEventBus;
+
 /**
  * 聚合根基类，提供了版本控制和事件发布的基础功能。
  *
