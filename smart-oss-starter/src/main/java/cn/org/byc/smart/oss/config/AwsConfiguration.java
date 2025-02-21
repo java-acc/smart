@@ -29,7 +29,16 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
+import software.amazon.awssdk.core.internal.http.loader.DefaultSdkHttpClientBuilder;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.retries.internal.DefaultAdaptiveRetryStrategy;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.utils.AttributeMap;
+
+import java.net.URI;
 
 @Configuration(proxyBeanMethods = false)
 @AllArgsConstructor
@@ -56,7 +65,24 @@ public class AwsConfiguration {
     @Bean
     @ConditionalOnMissingBean(S3Client.class)
     public S3Client amazonS3() {
-        return S3Client.builder().build();
+        StaticCredentialsProvider staticCredentialsProvider = StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(ossProperties.getAccessKey(), ossProperties.getSecretKey())
+        );
+
+        ClientOverrideConfiguration clientConfig = ClientOverrideConfiguration.builder()
+                .retryStrategy(DefaultAdaptiveRetryStrategy.builder()
+                        .maxAttempts(5)
+                        .build())
+                .build();
+
+        new DefaultSdkHttpClientBuilder().buildWithDefaults(AttributeMap.builder().build());
+
+        return S3Client.builder()
+                .endpointOverride(URI.create(ossProperties.getEndpoint()))
+                .region(Region.CN_NORTH_1)
+                .credentialsProvider(staticCredentialsProvider)
+                .overrideConfiguration(clientConfig)
+                .build();
     }
 
     @Bean
