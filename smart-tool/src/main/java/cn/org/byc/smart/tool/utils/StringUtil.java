@@ -37,58 +37,100 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 /**
+ * 字符串工具类，提供字符串常用操作的工具方法。
+ * 本工具类继承自 Spring 的 StringUtils，提供了更多的字符串处理功能。
+ * 
+ * 主要功能包括：
+ * - 字符串判空和检查
+ * - 字符串截取和分割
+ * - 字符串格式化和转换
+ * - 字符串查找和替换
+ * - 大小写转换
+ * - 驼峰和下划线命名转换
+ * 
  * @author Ken
+ * @since 1.0
  */
 public class StringUtil extends StringUtils {
 
     public static final int INDEX_NOT_FOUND = -1;
 
     /**
-     * Check whether the given {@code CharSequence} contains actual <em>text</em>.
-     * <p>More specifically, this method returns {@code true} if the
-     * {@code CharSequence} is not {@code null}, its length is greater than
-     * 0, and it contains at least one non-whitespace character.
-     * <pre class="code">
-     * StringUtil.isBlank(null) = true
-     * StringUtil.isBlank("") = true
-     * StringUtil.isBlank(" ") = true
-     * StringUtil.isBlank("12345") = false
-     * StringUtil.isBlank(" 12345 ") = false
-     * </pre>
-     *
-     * @param cs the {@code CharSequence} to check (may be {@code null})
-     * @return {@code true} if the {@code CharSequence} is not {@code null},
-     * its length is greater than 0, and it does not contain whitespace only
-     * @see Character#isWhitespace
+     * 检查字符序列是否为空白字符串。
+     * 
+     * <p>
+     * 以下情况将返回 true：
+     * <ul>
+     *   <li>输入为 null</li>
+     *   <li>输入为空字符串 ""</li>
+     *   <li>输入仅包含空白字符（空格、制表符等）</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * StringUtil.isBlank(null)     = true
+     * StringUtil.isBlank("")       = true
+     * StringUtil.isBlank(" ")      = true
+     * StringUtil.isBlank("  ")     = true
+     * StringUtil.isBlank("abc")    = false
+     * StringUtil.isBlank(" abc ")  = false
+     * }</pre>
+     * 
+     * @param cs 要检查的字符序列，可以为 null
+     * @return 如果字符序列为 null、空串或仅包含空白字符，则返回 true
      */
     public static boolean isBlank(final CharSequence cs) {
         return !StringUtil.hasText(cs);
     }
 
     /**
-     * <p>Checks if a CharSequence is not empty (""), not null and not whitespace only.</p>
-     * <pre>
-     * StringUtil.isNotBlank(null)	  = false
-     * StringUtil.isNotBlank("")		= false
-     * StringUtil.isNotBlank(" ")	   = false
-     * StringUtil.isNotBlank("bob")	 = true
-     * StringUtil.isNotBlank("  bob  ") = true
-     * </pre>
-     *
-     * @param cs the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is
-     * not empty and not null and not whitespace
-     * @see Character#isWhitespace
+     * 检查字符序列是否不为空白字符串。
+     * 
+     * <p>
+     * 以下情况将返回 true：
+     * <ul>
+     *   <li>输入不为 null</li>
+     *   <li>输入不为空字符串</li>
+     *   <li>输入包含至少一个非空白字符</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * StringUtil.isNotBlank(null)     = false
+     * StringUtil.isNotBlank("")       = false
+     * StringUtil.isNotBlank(" ")      = false
+     * StringUtil.isNotBlank("  ")     = false
+     * StringUtil.isNotBlank("abc")    = true
+     * StringUtil.isNotBlank(" abc ")  = true
+     * }</pre>
+     * 
+     * @param cs 要检查的字符序列，可以为 null
+     * @return 如果字符序列不为 null 且包含至少一个非空白字符，则返回 true
      */
     public static boolean isNotBlank(final CharSequence cs) {
         return StringUtil.hasText(cs);
     }
 
     /**
-     * 有 任意 一个 Blank
-     *
-     * @param css CharSequence
-     * @return boolean
+     * 检查多个字符序列中是否存在任意一个为空白字符串。
+     * 
+     * <p>
+     * 如果输入的字符序列数组为 null 或空数组，返回 true。
+     * 只要有一个字符序列为空白，就返回 true。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * StringUtil.isAnyBlank(null)             = true
+     * StringUtil.isAnyBlank(null, "abc")      = true
+     * StringUtil.isAnyBlank("", "abc")        = true
+     * StringUtil.isAnyBlank(" ", "abc")       = true
+     * StringUtil.isAnyBlank("abc", "")        = true
+     * StringUtil.isAnyBlank("abc", "  ")      = true
+     * StringUtil.isAnyBlank("abc", "xyz")     = false
+     * }</pre>
+     * 
+     * @param css 要检查的字符序列数组
+     * @return 如果任意一个字符序列为空白，则返回 true
      */
     public static boolean isAnyBlank(final CharSequence... css) {
         if (ObjectUtil.isEmpty(css)) {
@@ -98,10 +140,24 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 是否全非 Blank
-     *
-     * @param css CharSequence
-     * @return boolean
+     * 检查多个字符序列是否都不为空白字符串。
+     * 
+     * <p>
+     * 如果输入的字符序列数组为 null 或空数组，返回 false。
+     * 只有当所有字符序列都不为空白时，才返回 true。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * StringUtil.isNoneBlank(null)             = false
+     * StringUtil.isNoneBlank(null, "abc")      = false
+     * StringUtil.isNoneBlank("", "abc")        = false
+     * StringUtil.isNoneBlank(" ", "abc")       = false
+     * StringUtil.isNoneBlank("abc", "xyz")     = true
+     * StringUtil.isNoneBlank("abc", "  ")      = false
+     * }</pre>
+     * 
+     * @param css 要检查的字符序列数组
+     * @return 如果所有字符序列都不为空白，则返回 true
      */
     public static boolean isNoneBlank(final CharSequence... css) {
         if (ObjectUtil.isEmpty(css)) {
@@ -111,10 +167,26 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 判断一个字符串是否是数字
-     *
-     * @param cs the CharSequence to check, may be null
-     * @return {boolean}
+     * 判断字符序列是否只包含数字字符。
+     * 
+     * <p>
+     * 该方法会检查字符序列中的每个字符是否都是数字（0-9）。
+     * 如果字符序列为 null 或空白，返回 false。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * StringUtil.isNumeric(null)     = false
+     * StringUtil.isNumeric("")       = false
+     * StringUtil.isNumeric(" ")      = false
+     * StringUtil.isNumeric("123")    = true
+     * StringUtil.isNumeric("12 3")   = false
+     * StringUtil.isNumeric("ab2c")   = false
+     * StringUtil.isNumeric("12-3")   = false
+     * StringUtil.isNumeric("12.3")   = false
+     * }</pre>
+     * 
+     * @param cs 要检查的字符序列，可以为 null
+     * @return 如果字符序列只包含数字字符，则返回 true
      */
     public static boolean isNumeric(final CharSequence cs) {
         if (isBlank(cs)) {
@@ -130,56 +202,136 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll the {@code Collection} to convert
-     * @return the delimited {@code String}
+     * 将集合转换为以逗号分隔的字符串。
+     * 
+     * <p>
+     * 该方法将集合中的元素使用逗号连接成一个字符串。
+     * 集合中的每个元素都会调用其 toString() 方法转换为字符串。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * List<String> list = Arrays.asList("a", "b", "c");
+     * StringUtil.join(list)               = "a,b,c"
+     * 
+     * List<Integer> numbers = Arrays.asList(1, 2, 3);
+     * StringUtil.join(numbers)            = "1,2,3"
+     * 
+     * List<String> single = Arrays.asList("hello");
+     * StringUtil.join(single)             = "hello"
+     * 
+     * List<String> empty = new ArrayList<>();
+     * StringUtil.join(empty)              = ""
+     * }</pre>
+     * 
+     * @param coll 要连接的集合
+     * @return 连接后的字符串
      */
     public static String join(Collection<?> coll) {
         return StringUtil.collectionToCommaDelimitedString(coll);
     }
 
     /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll  the {@code Collection} to convert
-     * @param delim the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
+     * 将集合转换为使用指定分隔符分隔的字符串。
+     * 
+     * <p>
+     * 该方法将集合中的元素使用指定的分隔符连接成一个字符串。
+     * 集合中的每个元素都会调用其 toString() 方法转换为字符串。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * List<String> list = Arrays.asList("a", "b", "c");
+     * StringUtil.join(list, ",")          = "a,b,c"
+     * StringUtil.join(list, "-")          = "a-b-c"
+     * StringUtil.join(list, " and ")      = "a and b and c"
+     * 
+     * List<Integer> numbers = Arrays.asList(1, 2, 3);
+     * StringUtil.join(numbers, "|")       = "1|2|3"
+     * 
+     * List<String> single = Arrays.asList("hello");
+     * StringUtil.join(single, ",")        = "hello"
+     * }</pre>
+     * 
+     * @param coll  要连接的集合
+     * @param delim 分隔符
+     * @return 连接后的字符串
      */
     public static String join(Collection<?> coll, String delim) {
         return StringUtil.collectionToDelimitedString(coll, delim);
     }
 
     /**
-     * Convert a {@code String} array into a comma delimited {@code String}
-     * (i.e., CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param arr the array to display
-     * @return the delimited {@code String}
+     * 将数组转换为以逗号分隔的字符串。
+     * 
+     * <p>
+     * 该方法将数组中的元素使用逗号连接成一个字符串。
+     * 数组中的每个元素都会调用其 toString() 方法转换为字符串。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String[] arr = {"a", "b", "c"};
+     * StringUtil.join(arr)                = "a,b,c"
+     * 
+     * Integer[] numbers = {1, 2, 3};
+     * StringUtil.join(numbers)            = "1,2,3"
+     * 
+     * String[] single = {"hello"};
+     * StringUtil.join(single)             = "hello"
+     * 
+     * String[] empty = {};
+     * StringUtil.join(empty)              = ""
+     * }</pre>
+     * 
+     * @param arr 要连接的数组
+     * @return 连接后的字符串
      */
     public static String join(Object[] arr) {
         return StringUtil.arrayToCommaDelimitedString(arr);
     }
 
     /**
-     * Convert a {@code String} array into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param arr   the array to display
-     * @param delim the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
+     * 将数组转换为使用指定分隔符分隔的字符串。
+     * 
+     * <p>
+     * 该方法将数组中的元素使用指定的分隔符连接成一个字符串。
+     * 数组中的每个元素都会调用其 toString() 方法转换为字符串。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String[] arr = {"a", "b", "c"};
+     * StringUtil.join(arr, ",")           = "a,b,c"
+     * StringUtil.join(arr, "-")           = "a-b-c"
+     * StringUtil.join(arr, " and ")       = "a and b and c"
+     * 
+     * Integer[] numbers = {1, 2, 3};
+     * StringUtil.join(numbers, "|")       = "1|2|3"
+     * 
+     * String[] single = {"hello"};
+     * StringUtil.join(single, ",")        = "hello"
+     * }</pre>
+     * 
+     * @param arr   要连接的数组
+     * @param delim 分隔符
+     * @return 连接后的字符串
      */
     public static String join(Object[] arr, String delim) {
         return StringUtil.arrayToDelimitedString(arr, delim);
     }
 
     /**
-     * 生成uuid
-     *
-     * @return UUID
+     * 生成一个随机的 UUID 字符串，去除了连字符。
+     * 
+     * <p>
+     * 该方法使用 ThreadLocalRandom 生成随机的 UUID，
+     * 并移除了标准 UUID 中的连字符（-），返回一个32位的字符串。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String uuid = StringUtil.randomUUID();
+     * // 输出类似：550e8400e29b41d4a716446655440000
+     * System.out.println(uuid);
+     * }</pre>
+     * 
+     * @return 32位的 UUID 字符串（不含连字符）
      */
     public static String randomUUID() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -187,23 +339,64 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 转义HTML用于安全过滤
-     *
-     * @param html html
-     * @return {String}
+     * 转义 HTML 字符串，用于防止 XSS 攻击。
+     * 
+     * <p>
+     * 该方法将 HTML 特殊字符转换为对应的 HTML 实体，
+     * 主要用于防止跨站脚本攻击（XSS）。如果输入为 null 或空字符串，
+     * 则返回空字符串。
+     * 
+     * <p>转义对照表：
+     * <ul>
+     *   <li>&amp; 转换为 &amp;amp;</li>
+     *   <li>&lt; 转换为 &amp;lt;</li>
+     *   <li>&gt; 转换为 &amp;gt;</li>
+     *   <li>&quot; 转换为 &amp;quot;</li>
+     *   <li>&#39; 转换为 &amp;#39;</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String html = "<script>alert('XSS')</script>";
+     * String escaped = StringUtil.escapeHtml(html);
+     * // 输出：&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;
+     * System.out.println(escaped);
+     * }</pre>
+     * 
+     * @param html 需要转义的 HTML 字符串
+     * @return 转义后的字符串
      */
     public static String escapeHtml(String html) {
         return StringUtil.isBlank(html) ? StringPool.EMPTY : HtmlUtils.htmlEscape(html);
     }
 
     /**
-     * 清理字符串，清理出某些不可见字符
-     *
-     * @param txt 字符串
-     * @return {String}
+     * 清理字符串中的特殊字符和空白字符。
+     * 
+     * <p>
+     * 该方法会移除字符串中的以下字符：
+     * <ul>
+     *   <li>空格字符（包括全角空格）</li>
+     *   <li>制表符（\t）</li>
+     *   <li>换页符（\f）</li>
+     *   <li>垂直制表符（\v）</li>
+     *   <li>其他空白字符（\s）</li>
+     *   <li>特殊字符（`·•）</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String text = "Hello　World\t•`·Test";
+     * String cleaned = StringUtil.cleanChars(text);
+     * // 输出：HelloWorldTest
+     * System.out.println(cleaned);
+     * }</pre>
+     * 
+     * @param txt 需要清理的字符串
+     * @return 清理后的字符串
      */
     public static String cleanChars(String txt) {
-        return txt.replaceAll("[ 　`·•�\\f\\t\\v\\s]", "");
+        return txt.replaceAll("[ 　`·•\\f\\t\\v\\s]", "");
     }
 
 
@@ -212,21 +405,65 @@ public class StringUtil extends StringUtils {
     private static final String S_ALL = S_INT + S_STR;
 
     /**
-     * 随机数生成
-     *
-     * @param count 字符长度
-     * @return 随机数
+     * 生成指定长度的随机字符串。
+     * 默认生成包含数字和大小写字母的随机字符串。
+     * 
+     * <p>
+     * 该方法使用 ThreadLocalRandom 生成随机字符串，
+     * 字符范围包括数字（0-9）和大小写字母（a-z, A-Z）。
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String str1 = StringUtil.random(5);
+     * // 可能输出：Ax7Yz
+     * System.out.println(str1);
+     * 
+     * String str2 = StringUtil.random(10);
+     * // 可能输出：7bK9pN4mJx
+     * System.out.println(str2);
+     * }</pre>
+     * 
+     * @param count 要生成的字符串长度
+     * @return 生成的随机字符串
      */
     public static String random(int count) {
         return StringUtil.random(count, RandomType.ALL);
     }
 
     /**
-     * 随机数生成
-     *
-     * @param count      字符长度
-     * @param randomType 随机数类别
-     * @return 随机数
+     * 生成指定长度和类型的随机字符串。
+     * 
+     * <p>
+     * 该方法使用 ThreadLocalRandom 生成随机字符串，
+     * 可以指定生成的字符类型：
+     * <ul>
+     *   <li>INT - 仅包含数字（0-9）</li>
+     *   <li>STRING - 仅包含大小写字母（a-z, A-Z）</li>
+     *   <li>ALL - 包含数字和大小写字母</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * // 生成纯数字随机字符串
+     * String numbers = StringUtil.random(6, RandomType.INT);
+     * // 可能输出：847591
+     * System.out.println(numbers);
+     * 
+     * // 生成纯字母随机字符串
+     * String letters = StringUtil.random(6, RandomType.STRING);
+     * // 可能输出：AzBxYp
+     * System.out.println(letters);
+     * 
+     * // 生成数字和字母混合的随机字符串
+     * String mixed = StringUtil.random(6, RandomType.ALL);
+     * // 可能输出：7bK9pN
+     * System.out.println(mixed);
+     * }</pre>
+     * 
+     * @param count 要生成的字符串长度
+     * @param randomType 随机字符串类型
+     * @return 生成的随机字符串
+     * @throws IllegalArgumentException 如果 count 小于 0
      */
     public static String random(int count, RandomType randomType) {
         if (count == 0) {
@@ -248,17 +485,45 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 格式化文本, {} 表示占位符<br>
-     * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
-     * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
-     * 例：<br>
-     * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
-     * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is \{} for a<br>
-     * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
-     *
-     * @param template 文本模板，被替换的部分用 {} 表示
-     * @param params   参数值
-     * @return 格式化后的文本
+     * 使用占位符格式化字符串。
+     * 
+     * <p>
+     * 该方法使用 {} 作为占位符，将参数按顺序替换到模板字符串中。
+     * 如果需要在结果字符串中保留 {} 符号，可以使用 \\ 进行转义。
+     * 
+     * <p>格式化规则：
+     * <ul>
+     *   <li>使用 {} 作为参数占位符</li>
+     *   <li>使用 \\ 转义 { 字符</li>
+     *   <li>使用 \\\\ 转义 \ 字符</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * // 基本用法
+     * String result1 = StringUtil.format("Hello {}!", "World");
+     * // 输出：Hello World!
+     * System.out.println(result1);
+     * 
+     * // 多个参数
+     * String result2 = StringUtil.format("{}+{}={}", 1, 2, 3);
+     * // 输出：1+2=3
+     * System.out.println(result2);
+     * 
+     * // 转义 {}
+     * String result3 = StringUtil.format("Set\\{} = {}", "value");
+     * // 输出：Set{} = value
+     * System.out.println(result3);
+     * 
+     * // 转义 \
+     * String result4 = StringUtil.format("Path: \\\\{}", "folder");
+     * // 输出：Path: \folder
+     * System.out.println(result4);
+     * }</pre>
+     * 
+     * @param template 包含占位符的模板字符串
+     * @param params 要替换占位符的参数值
+     * @return 格式化后的字符串
      */
     public static String format(CharSequence template, Object... params) {
         if (null == template) {
@@ -271,25 +536,84 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 有序的格式化文本，使用{number}做为占位符<br>
-     * 例：<br>
-     * 通常使用：format("this is {0} for {1}", "a", "b") =》 this is a for b<br>
-     *
-     * @param pattern   文本格式
-     * @param arguments 参数
-     * @return 格式化后的文本
+     * 使用索引占位符格式化字符串。
+     * 
+     * <p>
+     * 该方法使用 {n} 形式的占位符（n 为参数索引，从 0 开始），
+     * 可以按照指定顺序将参数替换到模板字符串中。
+     * 
+     * <p>格式化规则：
+     * <ul>
+     *   <li>使用 {0}、{1}、{2} 等作为参数占位符</li>
+     *   <li>占位符索引从 0 开始</li>
+     *   <li>可以多次使用同一个索引</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * // 基本用法
+     * String result1 = StringUtil.indexedFormat("Hello {0}!", "World");
+     * // 输出：Hello World!
+     * System.out.println(result1);
+     * 
+     * // 指定参数顺序
+     * String result2 = StringUtil.indexedFormat("{1} + {0} = {2}", "b", "a", "c");
+     * // 输出：a + b = c
+     * System.out.println(result2);
+     * 
+     * // 重复使用参数
+     * String result3 = StringUtil.indexedFormat("{0}, {1}, and {0} again", "hello", "world");
+     * // 输出：hello, world, and hello again
+     * System.out.println(result3);
+     * }</pre>
+     * 
+     * @param pattern 包含索引占位符的模板字符串
+     * @param arguments 要替换占位符的参数值
+     * @return 格式化后的字符串
      */
     public static String indexedFormat(CharSequence pattern, Object... arguments) {
         return MessageFormat.format(pattern.toString(), arguments);
     }
 
     /**
-     * 格式化文本，使用 {varName} 占位<br>
-     * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
-     *
-     * @param template 文本模板，被替换的部分用 {key} 表示
-     * @param map      参数值对
-     * @return 格式化后的文本
+     * 使用命名占位符格式化字符串。
+     * 
+     * <p>
+     * 该方法使用 {key} 形式的占位符，通过 Map 中的键值对
+     * 替换模板字符串中的占位符。
+     * 
+     * <p>格式化规则：
+     * <ul>
+     *   <li>使用 {key} 形式的占位符，其中 key 为 Map 中的键名</li>
+     *   <li>如果 Map 中不存在对应的键，则保持原占位符不变</li>
+     *   <li>Map 中多余的键值对会被忽略</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * Map<String, Object> map = new HashMap<>();
+     * map.put("name", "Alice");
+     * map.put("age", 20);
+     * 
+     * // 基本用法
+     * String result1 = StringUtil.format("Hello {name}!", map);
+     * // 输出：Hello Alice!
+     * System.out.println(result1);
+     * 
+     * // 多个占位符
+     * String result2 = StringUtil.format("Name: {name}, Age: {age}", map);
+     * // 输出：Name: Alice, Age: 20
+     * System.out.println(result2);
+     * 
+     * // 未找到的键
+     * String result3 = StringUtil.format("Hello {name}, {title}!", map);
+     * // 输出：Hello Alice, {title}!
+     * System.out.println(result3);
+     * }</pre>
+     * 
+     * @param template 包含命名占位符的模板字符串
+     * @param map 包含键值对的 Map
+     * @return 格式化后的字符串
      */
     public static String format(CharSequence template, Map<?, ?> map) {
         if (null == template) {
@@ -1364,10 +1688,34 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 下划线转驼峰
-     *
-     * @param para 字符串
-     * @return String
+     * 将下划线命名转换为驼峰命名。
+     * 
+     * <p>
+     * 该方法将下划线分隔的命名转换为驼峰命名（小驼峰），
+     * 转换规则如下：
+     * <ul>
+     *   <li>第一个单词全部小写</li>
+     *   <li>其后的每个单词首字母大写，其余字母小写</li>
+     *   <li>去除所有下划线</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String result1 = StringUtil.underlineToHump("user_name");
+     * // 输出：userName
+     * System.out.println(result1);
+     * 
+     * String result2 = StringUtil.underlineToHump("order_item_id");
+     * // 输出：orderItemId
+     * System.out.println(result2);
+     * 
+     * String result3 = StringUtil.underlineToHump("CUSTOMER_ADDRESS");
+     * // 输出：customerAddress
+     * System.out.println(result3);
+     * }</pre>
+     * 
+     * @param para 下划线命名的字符串
+     * @return 驼峰命名的字符串
      */
     public static String underlineToHump(String para) {
         StringBuilder result = new StringBuilder();
@@ -1384,10 +1732,34 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 驼峰转下划线
-     *
-     * @param para 字符串
-     * @return String
+     * 将驼峰命名转换为下划线命名。
+     * 
+     * <p>
+     * 该方法将驼峰命名转换为下划线分隔的命名（全小写），
+     * 转换规则如下：
+     * <ul>
+     *   <li>首字母小写</li>
+     *   <li>在大写字母前添加下划线</li>
+     *   <li>将所有字母转换为小写</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String result1 = StringUtil.humpToUnderline("userName");
+     * // 输出：user_name
+     * System.out.println(result1);
+     * 
+     * String result2 = StringUtil.humpToUnderline("orderItemId");
+     * // 输出：order_item_id
+     * System.out.println(result2);
+     * 
+     * String result3 = StringUtil.humpToUnderline("CustomerAddress");
+     * // 输出：customer_address
+     * System.out.println(result3);
+     * }</pre>
+     * 
+     * @param para 驼峰命名的字符串
+     * @return 下划线命名的字符串
      */
     public static String humpToUnderline(String para) {
         para = lowerFirst(para);
@@ -1403,10 +1775,34 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 横线转驼峰
-     *
-     * @param para 字符串
-     * @return String
+     * 将横线命名转换为驼峰命名。
+     * 
+     * <p>
+     * 该方法将横线分隔的命名转换为驼峰命名（小驼峰），
+     * 转换规则如下：
+     * <ul>
+     *   <li>第一个单词全部小写</li>
+     *   <li>其后的每个单词首字母大写，其余字母小写</li>
+     *   <li>去除所有横线</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String result1 = StringUtil.lineToHump("user-name");
+     * // 输出：userName
+     * System.out.println(result1);
+     * 
+     * String result2 = StringUtil.lineToHump("order-item-id");
+     * // 输出：orderItemId
+     * System.out.println(result2);
+     * 
+     * String result3 = StringUtil.lineToHump("CUSTOMER-ADDRESS");
+     * // 输出：customerAddress
+     * System.out.println(result3);
+     * }</pre>
+     * 
+     * @param para 横线命名的字符串
+     * @return 驼峰命名的字符串
      */
     public static String lineToHump(String para) {
         StringBuilder result = new StringBuilder();
@@ -1423,10 +1819,34 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 驼峰转横线
-     *
-     * @param para 字符串
-     * @return String
+     * 将驼峰命名转换为横线命名。
+     * 
+     * <p>
+     * 该方法将驼峰命名转换为横线分隔的命名（全小写），
+     * 转换规则如下：
+     * <ul>
+     *   <li>首字母小写</li>
+     *   <li>在大写字母前添加横线</li>
+     *   <li>将所有字母转换为小写</li>
+     * </ul>
+     * 
+     * <p>示例：
+     * <pre>{@code
+     * String result1 = StringUtil.humpToLine("userName");
+     * // 输出：user-name
+     * System.out.println(result1);
+     * 
+     * String result2 = StringUtil.humpToLine("orderItemId");
+     * // 输出：order-item-id
+     * System.out.println(result2);
+     * 
+     * String result3 = StringUtil.humpToLine("CustomerAddress");
+     * // 输出：customer-address
+     * System.out.println(result3);
+     * }</pre>
+     * 
+     * @param para 驼峰命名的字符串
+     * @return 横线命名的字符串
      */
     public static String humpToLine(String para) {
         para = lowerFirst(para);
