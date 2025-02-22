@@ -49,72 +49,66 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * 工具包集合，只做简单的调用，不删除原有工具类
+ * 工具包集合，只做简单的调用，不删除原有工具类。
+ * 该类提供了一系列常用的工具方法，包括对象操作、字符串处理、集合操作等。
  *
  * @author Ken
  */
 public class Func {
 
     /**
-     * Checks that the specified object reference is not {@code null}. This
-     * method is designed primarily for doing parameter validation in methods
-     * and constructors, as demonstrated below:
+     * 检查指定的对象引用是否不为 null。此方法主要用于方法和构造函数中的参数验证。
+     * 
+     * <p>示例用法：
      * <blockquote><pre>
      * public Foo(Bar bar) {
      *     this.bar = $.requireNotNull(bar);
      * }
      * </pre></blockquote>
      *
-     * @param obj the object reference to check for nullity
-     * @param <T> the type of the reference
-     * @return {@code obj} if not {@code null}
-     * @throws NullPointerException if {@code obj} is {@code null}
+     * @param obj 要检查的对象引用
+     * @param <T> 引用的类型
+     * @return 如果不为 null，则返回对象本身
+     * @throws NullPointerException 如果对象为 null
      */
     public static <T> T requireNotNull(T obj) {
         return Objects.requireNonNull(obj);
     }
 
     /**
-     * Checks that the specified object reference is not {@code null} and
-     * throws a customized {@link NullPointerException} if it is. This method
-     * is designed primarily for doing parameter validation in methods and
-     * constructors with multiple parameters, as demonstrated below:
+     * 检查指定的对象引用是否不为 null，如果为 null 则抛出自定义消息的 NullPointerException。
+     * 此方法主要用于具有多个参数的方法和构造函数的参数验证。
+     * 
+     * <p>示例用法：
      * <blockquote><pre>
      * public Foo(Bar bar, Baz baz) {
-     *     this.bar = $.requireNotNull(bar, "bar must not be null");
-     *     this.baz = $.requireNotNull(baz, "baz must not be null");
+     *     this.bar = $.requireNotNull(bar, "bar 不能为 null");
+     *     this.baz = $.requireNotNull(baz, "baz 不能为 null");
      * }
      * </pre></blockquote>
      *
-     * @param obj     the object reference to check for nullity
-     * @param message detail message to be used in the event that a {@code
-     *                NullPointerException} is thrown
-     * @param <T>     the type of the reference
-     * @return {@code obj} if not {@code null}
-     * @throws NullPointerException if {@code obj} is {@code null}
+     * @param obj 要检查的对象引用
+     * @param message 如果抛出 NullPointerException 时的详细消息
+     * @param <T> 引用的类型
+     * @return 如果不为 null，则返回对象本身
+     * @throws NullPointerException 如果对象为 null
      */
     public static <T> T requireNotNull(T obj, String message) {
         return Objects.requireNonNull(obj, message);
     }
 
     /**
-     * Checks that the specified object reference is not {@code null} and
-     * throws a customized {@link NullPointerException} if it is.
+     * 检查指定的对象引用是否不为 null，如果为 null 则抛出自定义消息的 NullPointerException。
+     * 
+     * <p>与 {@link #requireNotNull(Object, String)} 方法不同，此方法允许延迟创建消息，
+     * 直到确实需要时才创建。虽然在非 null 的情况下可能会带来性能优势，但在决定调用此方法时，
+     * 应确保创建消息供应商的成本低于直接创建消息字符串的成本。
      *
-     * <p>Unlike the method {@link #requireNotNull(Object, String)},
-     * this method allows creation of the message to be deferred until
-     * after the null check is made. While this may confer a
-     * performance advantage in the non-null case, when deciding to
-     * call this method care should be taken that the costs of
-     * creating the message supplier are less than the cost of just
-     * creating the string message directly.
-     *
-     * @param obj             the object reference to check for nullity
-     * @param messageSupplier supplier of the detail message to be
-     *                        used in the event that a {@code NullPointerException} is thrown
-     * @param <T>             the type of the reference
-     * @return {@code obj} if not {@code null}
-     * @throws NullPointerException if {@code obj} is {@code null}
+     * @param obj 要检查的对象引用
+     * @param messageSupplier 用于生成异常详细消息的供应商
+     * @param <T> 引用的类型
+     * @return 如果不为 null，则返回对象本身
+     * @throws NullPointerException 如果对象为 null
      * @since 1.8
      */
     public static <T> T requireNotNull(T obj, Supplier<String> messageSupplier) {
@@ -122,15 +116,13 @@ public class Func {
     }
 
     /**
-     * Returns {@code true} if the provided reference is {@code null} otherwise
-     * returns {@code false}.
-     * <p>
-     * This method exists to be used as a
-     * {@link java.util.function.Predicate}, {@code filter($::isNull)}
+     * 判断提供的引用是否为 null。
+     * 
+     * <p>此方法可以作为 {@link java.util.function.Predicate} 使用，
+     * 例如：{@code filter($::isNull)}
      *
-     * @param obj a reference to be checked against {@code null}
-     * @return {@code true} if the provided reference is {@code null} otherwise
-     * {@code false}
+     * @param obj 要检查的引用
+     * @return 如果引用为 null 则返回 true，否则返回 false
      * @see java.util.function.Predicate
      * @since 1.8
      */
@@ -139,15 +131,13 @@ public class Func {
     }
 
     /**
-     * Returns {@code true} if the provided reference is non-{@code null}
-     * otherwise returns {@code false}.
-     * <p>
-     * This method exists to be used as a
-     * {@link java.util.function.Predicate}, {@code filter($::notNull)}
+     * 判断提供的引用是否不为 null。
+     * 
+     * <p>此方法可以作为 {@link java.util.function.Predicate} 使用，
+     * 例如：{@code filter($::notNull)}
      *
-     * @param obj a reference to be checked against {@code null}
-     * @return {@code true} if the provided reference is non-{@code null}
-     * otherwise {@code false}
+     * @param obj 要检查的引用
+     * @return 如果引用不为 null 则返回 true，否则返回 false
      * @see java.util.function.Predicate
      * @since 1.8
      */
@@ -156,41 +146,41 @@ public class Func {
     }
 
     /**
-     * 首字母变小写
+     * 将字符串的首字母转换为小写。
      *
-     * @param str 字符串
-     * @return {String}
+     * @param str 要转换的字符串
+     * @return 首字母小写的字符串
      */
     public static String firstCharToLower(String str) {
         return StringUtil.lowerFirst(str);
     }
 
     /**
-     * 首字母变大写
+     * 将字符串的首字母转换为大写。
      *
-     * @param str 字符串
-     * @return {String}
+     * @param str 要转换的字符串
+     * @return 首字母大写的字符串
      */
     public static String firstCharToUpper(String str) {
         return StringUtil.upperFirst(str);
     }
 
     /**
-     * Check whether the given {@code CharSequence} contains actual <em>text</em>.
-     * <p>More specifically, this method returns {@code true} if the
-     * {@code CharSequence} is not {@code null}, its length is greater than
-     * 0, and it contains at least one non-whitespace character.
+     * 检查给定的字符序列是否包含实际的文本内容。
+     * 
+     * <p>具体来说，当字符序列不为 null，长度大于 0，
+     * 并且包含至少一个非空白字符时，返回 true。
+     * 
      * <pre class="code">
-     * $.isBlank(null)		= true
-     * $.isBlank("")		= true
-     * $.isBlank(" ")		= true
-     * $.isBlank("12345")	= false
-     * $.isBlank(" 12345 ")	= false
+     * $.isBlank(null)     = true
+     * $.isBlank("")       = true
+     * $.isBlank(" ")      = true
+     * $.isBlank("12345")  = false
+     * $.isBlank(" 12345 ")= false
      * </pre>
      *
-     * @param cs the {@code CharSequence} to check (may be {@code null})
-     * @return {@code true} if the {@code CharSequence} is not {@code null},
-     * its length is greater than 0, and it does not contain whitespace only
+     * @param cs 要检查的字符序列（可以为 null）
+     * @return 如果字符序列不为 null，长度大于 0，且不仅包含空白字符，则返回 true
      * @see Character#isWhitespace
      */
     public static boolean isBlank(@Nullable final CharSequence cs) {
@@ -198,18 +188,18 @@ public class Func {
     }
 
     /**
-     * <p>Checks if a CharSequence is not empty (""), not null and not whitespace only.</p>
+     * 检查字符序列是否不为空（""），不为 null 且不仅包含空白字符。
+     * 
      * <pre>
-     * $.isNotBlank(null)	= false
-     * $.isNotBlank("")		= false
-     * $.isNotBlank(" ")	= false
-     * $.isNotBlank("bob")	= true
+     * $.isNotBlank(null)    = false
+     * $.isNotBlank("")      = false
+     * $.isNotBlank(" ")     = false
+     * $.isNotBlank("bob")   = true
      * $.isNotBlank("  bob  ") = true
      * </pre>
      *
-     * @param cs the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is
-     * not empty and not null and not whitespace
+     * @param cs 要检查的字符序列，可以为 null
+     * @return 如果字符序列不为空且不为 null 且不仅包含空白字符，则返回 true
      * @see Character#isWhitespace
      */
     public static boolean isNotBlank(@Nullable final CharSequence cs) {
@@ -217,84 +207,80 @@ public class Func {
     }
 
     /**
-     * 有 任意 一个 Blank
+     * 检查是否有任意一个字符序列为空白。
      *
-     * @param css CharSequence
-     * @return boolean
+     * @param css 要检查的字符序列数组
+     * @return 如果任意一个字符序列为空白，则返回 true
      */
     public static boolean isAnyBlank(final CharSequence... css) {
         return StringUtil.isAnyBlank(css);
     }
 
     /**
-     * 是否全非 Blank
+     * 检查是否所有字符序列都不为空白。
      *
-     * @param css CharSequence
-     * @return boolean
+     * @param css 要检查的字符序列数组
+     * @return 如果所有字符序列都不为空白，则返回 true
      */
     public static boolean isNoneBlank(final CharSequence... css) {
         return StringUtil.isNoneBlank(css);
     }
 
     /**
-     * Determine whether the given object is an array:
-     * either an Object array or a primitive array.
+     * 判断给定对象是否为数组（对象数组或基本类型数组）。
      *
-     * @param obj the object to check
-     * @return 是否数组
+     * @param obj 要检查的对象
+     * @return 如果对象是数组则返回 true
      */
     public static boolean isArray(@Nullable Object obj) {
         return ObjectUtil.isArray(obj);
     }
 
     /**
-     * Determine whether the given object is empty:
-     * i.e. {@code null} or of zero length.
+     * 判断给定对象是否为空，即为 null 或长度为零。
      *
-     * @param obj the object to check
-     * @return 数组是否为空
+     * @param obj 要检查的对象
+     * @return 如果对象为空则返回 true
      */
     public static boolean isEmpty(@Nullable Object obj) {
         return ObjectUtil.isEmpty(obj);
     }
 
     /**
-     * Determine whether the given object is not empty:
-     * i.e. {@code null} or of zero length.
+     * 判断给定对象是否不为空，即不为 null 且长度不为零。
      *
-     * @param obj the object to check
-     * @return 是否不为空
+     * @param obj 要检查的对象
+     * @return 如果对象不为空则返回 true
      */
     public static boolean isNotEmpty(@Nullable Object obj) {
         return !ObjectUtil.isEmpty(obj);
     }
 
     /**
-     * Determine whether the given array is empty:
-     * i.e. {@code null} or of zero length.
+     * 判断给定数组是否为空，即为 null 或长度为零。
      *
-     * @param array the array to check
-     * @return 数组是否为空
+     * @param array 要检查的数组
+     * @return 如果数组为空则返回 true
      */
     public static boolean isEmpty(@Nullable Object[] array) {
         return ObjectUtil.isEmpty(array);
     }
 
     /**
-     * 判断数组不为空
+     * 判断给定数组是否不为空，即不为 null 且长度不为零。
      *
-     * @param array 数组
-     * @return 数组是否不为空
+     * @param array 要检查的数组
+     * @return 如果数组不为空则返回 true
      */
     public static boolean isNotEmpty(@Nullable Object[] array) {
         return ObjectUtil.isNotEmpty(array);
     }
 
     /**
-     * 对象组中是否存在 Empty Object
+     * 判断对象组中是否存在任意一个为空的对象。
      *
-     * @param os 对象组
-     * @return boolean
+     * @param os 要检查的对象组
+     * @return 如果存在任意一个空对象则返回 true
      */
     public static boolean hasEmpty(Object... os) {
         for (Object o : os) {
@@ -306,10 +292,10 @@ public class Func {
     }
 
     /**
-     * 对象组中是否全是 Empty Object
+     * 判断对象组中是否所有对象都为空。
      *
-     * @param os 对象组
-     * @return boolean
+     * @param os 要检查的对象组
+     * @return 如果所有对象都为空则返回 true
      */
     public static boolean allEmpty(Object... os) {
         for (Object o : os) {
@@ -321,26 +307,26 @@ public class Func {
     }
 
     /**
-     * 比较两个对象是否相等。<br>
-     * 相同的条件有两个，满足其一即可：<br>
+     * 比较两个对象是否相等。
+     * 相同的条件有两个，满足其一即可：
      *
      * @param obj1 对象1
      * @param obj2 对象2
-     * @return 是否相等
+     * @return 如果两个对象相等则返回 true
      */
     public static boolean equals(Object obj1, Object obj2) {
         return Objects.equals(obj1, obj2);
     }
 
     /**
-     * Determine if the given objects are equal, returning {@code true} if
-     * both are {@code null} or {@code false} if only one is {@code null}.
-     * <p>Compares arrays with {@code Arrays.equals}, performing an equality
-     * check based on the array elements rather than the array reference.
+     * 判断给定的对象是否相等，如果两个对象都为 null 则返回 true，
+     * 如果只有一个为 null 则返回 false。
+     * 
+     * <p>对于数组，使用 Arrays.equals 进行比较，基于数组元素而不是数组引用进行相等性检查。
      *
-     * @param o1 first Object to compare
-     * @param o2 second Object to compare
-     * @return whether the given objects are equal
+     * @param o1 第一个要比较的对象
+     * @param o2 第二个要比较的对象
+     * @return 如果两个对象相等则返回 true
      * @see Object#equals(Object)
      * @see Arrays#equals
      */
@@ -349,55 +335,55 @@ public class Func {
     }
 
     /**
-     * Check whether the given Array contains the given element.
+     * 检查给定数组是否包含指定元素。
      *
-     * @param array   the Array to check
-     * @param element the element to look for
-     * @param <T>     The generic tag
-     * @return {@code true} if found, {@code false} else
+     * @param array 要检查的数组
+     * @param element 要查找的元素
+     * @param <T> 泛型标记
+     * @return 如果找到元素则返回 true
      */
     public static <T> boolean contains(@Nullable T[] array, final T element) {
         return CollectionUtil.contains(array, element);
     }
 
     /**
-     * Check whether the given Iterator contains the given element.
+     * 检查给定迭代器是否包含指定元素。
      *
-     * @param iterator the Iterator to check
-     * @param element  the element to look for
-     * @return {@code true} if found, {@code false} otherwise
+     * @param iterator 要检查的迭代器
+     * @param element 要查找的元素
+     * @return 如果找到元素则返回 true
      */
     public static boolean contains(@Nullable Iterator<?> iterator, Object element) {
         return CollectionUtil.contains(iterator, element);
     }
 
     /**
-     * Check whether the given Enumeration contains the given element.
+     * 检查给定枚举是否包含指定元素。
      *
-     * @param enumeration the Enumeration to check
-     * @param element     the element to look for
-     * @return {@code true} if found, {@code false} otherwise
+     * @param enumeration 要检查的枚举
+     * @param element 要查找的元素
+     * @return 如果找到元素则返回 true
      */
     public static boolean contains(@Nullable Enumeration<?> enumeration, Object element) {
         return CollectionUtil.contains(enumeration, element);
     }
 
     /**
-     * 强转string,并去掉多余空格
+     * 将对象转换为字符串，并去掉多余空格。
      *
-     * @param str 字符串
-     * @return String
+     * @param str 要转换的对象
+     * @return 转换后的字符串
      */
     public static String toStr(Object str) {
         return toStr(str, "");
     }
 
     /**
-     * 强转string,并去掉多余空格
+     * 将对象转换为字符串，并去掉多余空格。
      *
-     * @param str          字符串
+     * @param str 要转换的对象
      * @param defaultValue 默认值
-     * @return String
+     * @return 转换后的字符串，如果对象为 null 则返回默认值
      */
     public static String toStr(Object str, String defaultValue) {
         if (null == str) {
@@ -407,207 +393,195 @@ public class Func {
     }
 
     /**
-     * 判断一个字符串是否是数字
+     * 判断一个字符序列是否全部由数字组成。
      *
-     * @param cs the CharSequence to check, may be null
-     * @return {boolean}
+     * @param cs 要检查的字符序列，可以为 null
+     * @return 如果字符序列全部由数字组成则返回 true
      */
     public static boolean isNumeric(final CharSequence cs) {
         return StringUtil.isNumeric(cs);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>int</code>, returning
-     * <code>zero</code> if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, <code>zero</code> is returned.</p>
-     *
+     * 将字符串转换为整数，如果转换失败则返回 0。
+     * 
+     * <p>如果字符串为 null，则返回 0。
+     * 
      * <pre>
-     *   $.toInt(null) = 0
-     *   $.toInt("")   = 0
-     *   $.toInt("1")  = 1
+     * $.toInt(null) = 0
+     * $.toInt("")   = 0
+     * $.toInt("1")  = 1
      * </pre>
      *
-     * @param value the string to convert, may be null
-     * @return the int represented by the string, or <code>zero</code> if
-     * conversion fails
+     * @param value 要转换的字符串
+     * @return 转换后的整数，如果转换失败则返回 0
      */
     public static int toInt(final Object value) {
         return NumberUtil.toInt(String.valueOf(value));
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>int</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为整数，如果转换失败则返回指定的默认值。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toInt(null, 1) = 1
-     *   $.toInt("", 1)   = 1
-     *   $.toInt("1", 0)  = 1
+     * $.toInt(null, 1) = 1
+     * $.toInt("", 1)   = 1
+     * $.toInt("1", 0)  = 1
      * </pre>
      *
-     * @param value        the string to convert, may be null
-     * @param defaultValue the default value
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @param defaultValue 默认值
+     * @return 转换后的整数，如果转换失败则返回默认值
      */
     public static int toInt(final Object value, final int defaultValue) {
         return NumberUtil.toInt(String.valueOf(value), defaultValue);
     }
 
     /**
-     * <p>Convert a <code>String</code> to a <code>long</code>, returning
-     * <code>zero</code> if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, <code>zero</code> is returned.</p>
-     *
+     * 将字符串转换为长整数，如果转换失败则返回 0。
+     * 
+     * <p>如果字符串为 null，则返回 0。
+     * 
      * <pre>
-     *   $.toLong(null) = 0L
-     *   $.toLong("")   = 0L
-     *   $.toLong("1")  = 1L
+     * $.toLong(null) = 0L
+     * $.toLong("")   = 0L
+     * $.toLong("1")  = 1L
      * </pre>
      *
-     * @param value the string to convert, may be null
-     * @return the long represented by the string, or <code>0</code> if
-     * conversion fails
+     * @param value 要转换的字符串
+     * @return 转换后的长整数，如果转换失败则返回 0
      */
     public static long toLong(final Object value) {
         return NumberUtil.toLong(String.valueOf(value));
     }
 
     /**
-     * <p>Convert a <code>String</code> to a <code>long</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为长整数，如果转换失败则返回指定的默认值。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toLong(null, 1L) = 1L
-     *   $.toLong("", 1L)   = 1L
-     *   $.toLong("1", 0L)  = 1L
+     * $.toLong(null, 1L) = 1L
+     * $.toLong("", 1L)   = 1L
+     * $.toLong("1", 0L)  = 1L
      * </pre>
      *
-     * @param value        the string to convert, may be null
-     * @param defaultValue the default value
-     * @return the long represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @param defaultValue 默认值
+     * @return 转换后的长整数，如果转换失败则返回默认值
      */
     public static long toLong(final Object value, final long defaultValue) {
         return NumberUtil.toLong(String.valueOf(value), defaultValue);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>Double</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为双精度浮点数，如果转换失败则返回 -1.00。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toDouble(null, 1) = 1.0
-     *   $.toDouble("", 1)   = 1.0
-     *   $.toDouble("1", 0)  = 1.0
+     * $.toDouble(null, 1) = 1.0
+     * $.toDouble("", 1)   = 1.0
+     * $.toDouble("1", 0)  = 1.0
      * </pre>
      *
-     * @param value the string to convert, may be null
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @return 转换后的双精度浮点数，如果转换失败则返回 -1.00
      */
     public static Double toDouble(Object value) {
         return toDouble(String.valueOf(value), -1.00);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>Double</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为双精度浮点数，如果转换失败则返回指定的默认值。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toDouble(null, 1) = 1.0
-     *   $.toDouble("", 1)   = 1.0
-     *   $.toDouble("1", 0)  = 1.0
+     * $.toDouble(null, 1) = 1.0
+     * $.toDouble("", 1)   = 1.0
+     * $.toDouble("1", 0)  = 1.0
      * </pre>
      *
-     * @param value        the string to convert, may be null
-     * @param defaultValue the default value
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @param defaultValue 默认值
+     * @return 转换后的双精度浮点数，如果转换失败则返回默认值
      */
     public static Double toDouble(Object value, Double defaultValue) {
         return NumberUtil.toDouble(String.valueOf(value), defaultValue);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>Float</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为单精度浮点数，如果转换失败则返回 -1.0f。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toFloat(null, 1) = 1.00f
-     *   $.toFloat("", 1)   = 1.00f
-     *   $.toFloat("1", 0)  = 1.00f
+     * $.toFloat(null, 1) = 1.00f
+     * $.toFloat("", 1)   = 1.00f
+     * $.toFloat("1", 0)  = 1.00f
      * </pre>
      *
-     * @param value the string to convert, may be null
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @return 转换后的单精度浮点数，如果转换失败则返回 -1.0f
      */
     public static Float toFloat(Object value) {
         return toFloat(String.valueOf(value), -1.0f);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>Float</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为单精度浮点数，如果转换失败则返回指定的默认值。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toFloat(null, 1) = 1.00f
-     *   $.toFloat("", 1)   = 1.00f
-     *   $.toFloat("1", 0)  = 1.00f
+     * $.toFloat(null, 1) = 1.00f
+     * $.toFloat("", 1)   = 1.00f
+     * $.toFloat("1", 0)  = 1.00f
      * </pre>
      *
-     * @param value        the string to convert, may be null
-     * @param defaultValue the default value
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @param defaultValue 默认值
+     * @return 转换后的单精度浮点数，如果转换失败则返回默认值
      */
     public static Float toFloat(Object value, Float defaultValue) {
         return NumberUtil.toFloat(String.valueOf(value), defaultValue);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>Boolean</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为布尔值，如果转换失败则返回 null。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toBoolean("true", true)  = true
-     *   $.toBoolean("false")   	= false
-     *   $.toBoolean("", false)  	= false
+     * $.toBoolean("true", true)  = true
+     * $.toBoolean("false")       = false
+     * $.toBoolean("", false)     = false
      * </pre>
      *
-     * @param value the string to convert, may be null
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @return 转换后的布尔值，如果转换失败则返回 null
      */
     public static Boolean toBoolean(Object value) {
         return toBoolean(value, null);
     }
 
     /**
-     * <p>Convert a <code>String</code> to an <code>Boolean</code>, returning a
-     * default value if the conversion fails.</p>
-     *
-     * <p>If the string is <code>null</code>, the default value is returned.</p>
-     *
+     * 将字符串转换为布尔值，如果转换失败则返回指定的默认值。
+     * 
+     * <p>如果字符串为 null，则返回默认值。
+     * 
      * <pre>
-     *   $.toBoolean("true", true)  = true
-     *   $.toBoolean("false")   	= false
-     *   $.toBoolean("", false)  	= false
+     * $.toBoolean("true", true)  = true
+     * $.toBoolean("false")       = false
+     * $.toBoolean("", false)     = false
      * </pre>
      *
-     * @param value        the string to convert, may be null
-     * @param defaultValue the default value
-     * @return the int represented by the string, or the default if conversion fails
+     * @param value 要转换的字符串
+     * @param defaultValue 默认值
+     * @return 转换后的布尔值，如果转换失败则返回默认值
      */
     public static Boolean toBoolean(Object value, Boolean defaultValue) {
         if (value != null) {
@@ -619,21 +593,22 @@ public class Func {
     }
 
     /**
-     * 转换为Integer数组<br>
+     * 将字符串转换为整数数组。
+     * 使用逗号作为默认分隔符。
      *
-     * @param str 被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的整数数组
      */
     public static Integer[] toIntArray(String str) {
         return toIntArray(",", str);
     }
 
     /**
-     * 转换为Integer数组<br>
+     * 将字符串转换为整数数组。
      *
      * @param split 分隔符
-     * @param str   被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的整数数组
      */
     public static Integer[] toIntArray(String split, String str) {
         if (StringUtil.isEmpty(str)) {
@@ -649,42 +624,44 @@ public class Func {
     }
 
     /**
-     * 转换为Integer集合<br>
+     * 将字符串转换为整数列表。
+     * 使用逗号作为默认分隔符。
      *
-     * @param str 结果被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的整数列表
      */
     public static List<Integer> toIntList(String str) {
         return Arrays.asList(toIntArray(str));
     }
 
     /**
-     * 转换为Integer集合<br>
+     * 将字符串转换为整数列表。
      *
      * @param split 分隔符
-     * @param str   被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的整数列表
      */
     public static List<Integer> toIntList(String split, String str) {
         return Arrays.asList(toIntArray(split, str));
     }
 
     /**
-     * 转换为Long数组<br>
+     * 将字符串转换为长整数数组。
+     * 使用逗号作为默认分隔符。
      *
-     * @param str 被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的长整数数组
      */
     public static Long[] toLongArray(String str) {
         return toLongArray(",", str);
     }
 
     /**
-     * 转换为Long数组<br>
+     * 将字符串转换为长整数数组。
      *
      * @param split 分隔符
-     * @param str   被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的长整数数组
      */
     public static Long[] toLongArray(String split, String str) {
         if (StringUtil.isEmpty(str)) {
@@ -700,42 +677,44 @@ public class Func {
     }
 
     /**
-     * 转换为Long集合<br>
+     * 将字符串转换为长整数列表。
+     * 使用逗号作为默认分隔符。
      *
-     * @param str 结果被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的长整数列表
      */
     public static List<Long> toLongList(String str) {
         return Arrays.asList(toLongArray(str));
     }
 
     /**
-     * 转换为Long集合<br>
+     * 将字符串转换为长整数列表。
      *
      * @param split 分隔符
-     * @param str   被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的长整数列表
      */
     public static List<Long> toLongList(String split, String str) {
         return Arrays.asList(toLongArray(split, str));
     }
 
     /**
-     * 转换为String数组<br>
+     * 将字符串转换为字符串数组。
+     * 使用逗号作为默认分隔符。
      *
-     * @param str 被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的字符串数组
      */
     public static String[] toStrArray(String str) {
         return toStrArray(",", str);
     }
 
     /**
-     * 转换为String数组<br>
+     * 将字符串转换为字符串数组。
      *
      * @param split 分隔符
-     * @param str   被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的字符串数组
      */
     public static String[] toStrArray(String split, String str) {
         if (isBlank(str)) {
@@ -745,457 +724,499 @@ public class Func {
     }
 
     /**
-     * 转换为String集合<br>
+     * 将字符串转换为字符串列表。
+     * 使用逗号作为默认分隔符。
      *
-     * @param str 结果被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的字符串列表
      */
     public static List<String> toStrList(String str) {
         return Arrays.asList(toStrArray(str));
     }
 
     /**
-     * 转换为String集合<br>
+     * 将字符串转换为字符串列表。
      *
      * @param split 分隔符
-     * @param str   被转换的值
-     * @return 结果
+     * @param str 要转换的字符串
+     * @return 转换后的字符串列表
      */
     public static List<String> toStrList(String split, String str) {
         return Arrays.asList(toStrArray(split, str));
     }
 
     /**
-     * 将 long 转短字符串 为 62 进制
+     * 将长整数转换为 62 进制的短字符串。
      *
-     * @param num 数字
-     * @return 短字符串
+     * @param num 要转换的数字
+     * @return 转换后的 62 进制字符串
      */
     public static String to62String(long num) {
         return NumberUtil.to62String(num);
     }
 
     /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
-     * <p>Useful for {@code toString()} implementations.
+     * 将集合转换为分隔的字符串（例如 CSV 格式）。
+     * 使用默认的分隔符。
+     * 
+     * <p>此方法对于实现 toString() 方法很有用。
      *
-     * @param coll the {@code Collection} to convert
-     * @return the delimited {@code String}
+     * @param coll 要转换的集合
+     * @return 转换后的分隔字符串
      */
     public static String join(Collection<?> coll) {
         return StringUtil.join(coll);
     }
 
     /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
+     * 将集合转换为分隔的字符串（例如 CSV 格式）。
+     * 
+     * <p>此方法对于实现 toString() 方法很有用。
      *
-     * @param coll  the {@code Collection} to convert
-     * @param delim the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
+     * @param coll 要转换的集合
+     * @param delim 分隔符（通常是逗号 ","）
+     * @return 转换后的分隔字符串
      */
     public static String join(Collection<?> coll, String delim) {
         return StringUtil.join(coll, delim);
     }
 
     /**
-     * Convert a {@code String} array into a comma delimited {@code String}
-     * (i.e., CSV).
-     * <p>Useful for {@code toString()} implementations.
+     * 将字符串数组转换为逗号分隔的字符串（即 CSV 格式）。
+     * 
+     * <p>此方法对于实现 toString() 方法很有用。
      *
-     * @param arr the array to display
-     * @return the delimited {@code String}
+     * @param arr 要显示的数组
+     * @return 转换后的分隔字符串
      */
     public static String join(Object[] arr) {
         return StringUtil.join(arr);
     }
 
     /**
-     * Convert a {@code String} array into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
+     * 将字符串数组转换为分隔的字符串（例如 CSV 格式）。
+     * 
+     * <p>此方法对于实现 toString() 方法很有用。
      *
-     * @param arr   the array to display
-     * @param delim the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
+     * @param arr 要显示的数组
+     * @param delim 分隔符（通常是逗号 ","）
+     * @return 转换后的分隔字符串
      */
     public static String join(Object[] arr, String delim) {
         return StringUtil.join(arr, delim);
     }
 
     /**
-     * 生成uuid
+     * 生成 UUID。
      *
-     * @return UUID
+     * @return 生成的 UUID 字符串
      */
     public static String randomUUID() {
         return StringUtil.randomUUID();
     }
 
     /**
-     * 转义HTML用于安全过滤
+     * 转义 HTML 字符串以进行安全过滤。
      *
-     * @param html html
-     * @return {String}
+     * @param html 要转义的 HTML 字符串
+     * @return 转义后的字符串
      */
     public static String escapeHtml(String html) {
         return StringUtil.escapeHtml(html);
     }
 
     /**
-     * 随机数生成
+     * 生成指定长度的随机字符串。
      *
-     * @param count 字符长度
-     * @return 随机数
+     * @param count 要生成的字符串长度
+     * @return 生成的随机字符串
      */
     public static String random(int count) {
         return StringUtil.random(count);
     }
 
     /**
-     * 随机数生成
+     * 生成指定长度和类型的随机字符串。
      *
-     * @param count      字符长度
-     * @param randomType 随机数类别
-     * @return 随机数
+     * @param count 要生成的字符串长度
+     * @param randomType 随机字符串的类型
+     * @return 生成的随机字符串
      */
     public static String random(int count, RandomType randomType) {
         return StringUtil.random(count, randomType);
     }
 
     /**
-     * Calculates the MD5 digest and returns the value as a 32 character hex string.
+     * 计算字符串的 MD5 摘要，并返回 32 位十六进制字符串。
      *
-     * @param data Data to digest
-     * @return MD5 digest as a hex string
+     * @param data 要计算摘要的数据
+     * @return MD5 摘要的十六进制字符串
      */
     public static String md5Hex(final String data) {
         return DigestUtil.md5Hex(data);
     }
 
     /**
-     * Return a hexadecimal string representation of the MD5 digest of the given bytes.
+     * 计算字节数组的 MD5 摘要，并返回十六进制字符串。
      *
-     * @param bytes the bytes to calculate the digest over
-     * @return a hexadecimal digest string
+     * @param bytes 要计算摘要的字节数组
+     * @return MD5 摘要的十六进制字符串
      */
     public static String md5Hex(final byte[] bytes) {
         return DigestUtil.md5Hex(bytes);
     }
 
+    /**
+     * 计算字符串的 SHA-1 摘要。
+     *
+     * @param srcStr 要计算摘要的源字符串
+     * @return SHA-1 摘要字符串
+     */
     public static String sha1(String srcStr) {
         return DigestUtil.sha1(srcStr);
     }
 
+    /**
+     * 计算字符串的 SHA-256 摘要。
+     *
+     * @param srcStr 要计算摘要的源字符串
+     * @return SHA-256 摘要字符串
+     */
     public static String sha256(String srcStr) {
         return DigestUtil.sha256(srcStr);
     }
 
+    /**
+     * 计算字符串的 SHA-384 摘要。
+     *
+     * @param srcStr 要计算摘要的源字符串
+     * @return SHA-384 摘要字符串
+     */
     public static String sha384(String srcStr) {
         return DigestUtil.sha384(srcStr);
     }
 
+    /**
+     * 计算字符串的 SHA-512 摘要。
+     *
+     * @param srcStr 要计算摘要的源字符串
+     * @return SHA-512 摘要字符串
+     */
     public static String sha512(String srcStr) {
         return DigestUtil.sha512(srcStr);
     }
 
     /**
-     * 自定义加密 先MD5再SHA1
+     * 自定义加密算法，先进行 MD5 加密，然后进行 SHA1 加密。
      *
-     * @param data 字符串
-     * @return String
+     * @param data 要加密的字符串
+     * @return 加密后的字符串
      */
     public static String encrypt(String data) {
         return DigestUtil.encrypt(data);
     }
 
     /**
-     * 编码
+     * 使用 Base64 编码字符串。
+     * 使用默认字符集。
      *
-     * @param value 字符串
-     * @return {String}
+     * @param value 要编码的字符串
+     * @return 编码后的字符串
      */
     public static String encodeBase64(String value) {
         return Base64Util.encode(value);
     }
 
     /**
-     * 编码
+     * 使用 Base64 编码字符串。
      *
-     * @param value   字符串
+     * @param value 要编码的字符串
      * @param charset 字符集
-     * @return {String}
+     * @return 编码后的字符串
      */
     public static String encodeBase64(String value, Charset charset) {
         return Base64Util.encode(value, charset);
     }
 
     /**
-     * 编码URL安全
+     * 使用 URL 安全的 Base64 编码字符串。
+     * 使用默认字符集。
      *
-     * @param value 字符串
-     * @return {String}
+     * @param value 要编码的字符串
+     * @return 编码后的字符串
      */
     public static String encodeBase64UrlSafe(String value) {
         return Base64Util.encodeUrlSafe(value);
     }
 
     /**
-     * 编码URL安全
+     * 使用 URL 安全的 Base64 编码字符串。
      *
-     * @param value   字符串
+     * @param value 要编码的字符串
      * @param charset 字符集
-     * @return {String}
+     * @return 编码后的字符串
      */
     public static String encodeBase64UrlSafe(String value, Charset charset) {
         return Base64Util.encodeUrlSafe(value, charset);
     }
 
     /**
-     * 解码
+     * 解码 Base64 编码的字符串。
+     * 使用默认字符集。
      *
-     * @param value 字符串
-     * @return {String}
+     * @param value 要解码的字符串
+     * @return 解码后的字符串
      */
     public static String decodeBase64(String value) {
         return Base64Util.decode(value);
     }
 
     /**
-     * 解码
+     * 解码 Base64 编码的字符串。
      *
-     * @param value   字符串
+     * @param value 要解码的字符串
      * @param charset 字符集
-     * @return {String}
+     * @return 解码后的字符串
      */
     public static String decodeBase64(String value, Charset charset) {
         return Base64Util.decode(value, charset);
     }
 
     /**
-     * 解码URL安全
+     * 解码 URL 安全的 Base64 编码字符串。
+     * 使用默认字符集。
      *
-     * @param value 字符串
-     * @return {String}
+     * @param value 要解码的字符串
+     * @return 解码后的字符串
      */
     public static String decodeBase64UrlSafe(String value) {
         return Base64Util.decodeUrlSafe(value);
     }
 
     /**
-     * 解码URL安全
+     * 解码 URL 安全的 Base64 编码字符串。
      *
-     * @param value   字符串
+     * @param value 要解码的字符串
      * @param charset 字符集
-     * @return {String}
+     * @return 解码后的字符串
      */
     public static String decodeBase64UrlSafe(String value, Charset charset) {
         return Base64Util.decodeUrlSafe(value, charset);
     }
 
     /**
-     * closeQuietly
+     * 安静地关闭可关闭的资源。
+     * 不会抛出任何异常。
      *
-     * @param closeable 自动关闭
+     * @param closeable 要关闭的资源
      */
     public static void closeQuietly(@Nullable Closeable closeable) {
         IoUtil.closeQuietly(closeable);
     }
 
     /**
-     * InputStream to String utf-8
+     * 将输入流转换为字符串。
+     * 使用 UTF-8 字符集。
      *
-     * @param input the <code>InputStream</code> to read from
-     * @return the requested String
-     * @throws NullPointerException if the input is null
+     * @param input 要读取的输入流
+     * @return 转换后的字符串
+     * @throws NullPointerException 如果输入流为 null
      */
     public static String toString(InputStream input) {
         return IoUtil.toString(input);
     }
 
     /**
-     * InputStream to String
+     * 将输入流转换为字符串。
      *
-     * @param input   the <code>InputStream</code> to read from
-     * @param charset the <code>Charsets</code>
-     * @return the requested String
-     * @throws NullPointerException if the input is null
+     * @param input 要读取的输入流
+     * @param charset 字符集
+     * @return 转换后的字符串
+     * @throws NullPointerException 如果输入流为 null
      */
     public static String toString(@Nullable InputStream input, Charset charset) {
         return IoUtil.toString(input, charset);
     }
 
+    /**
+     * 将输入流转换为字节数组。
+     *
+     * @param input 要读取的输入流
+     * @return 转换后的字节数组
+     */
     public static byte[] toByteArray(@Nullable InputStream input) {
         return IoUtil.toByteArray(input);
     }
 
     /**
-     * 将对象序列化成json字符串
+     * 将对象序列化为 JSON 字符串。
      *
-     * @param object javaBean
-     * @return jsonString json字符串
+     * @param object 要序列化的 Java 对象
+     * @return 序列化后的 JSON 字符串
      */
     public static String toJson(Object object) {
         return JsonUtil.toJson(object);
     }
 
     /**
-     * 将对象序列化成 json byte 数组
+     * 将对象序列化为 JSON 字节数组。
      *
-     * @param object javaBean
-     * @return jsonString json字符串
+     * @param object 要序列化的 Java 对象
+     * @return 序列化后的 JSON 字节数组
      */
     public static byte[] toJsonAsBytes(Object object) {
         return JsonUtil.toJsonAsBytes(object);
     }
 
     /**
-     * 将json字符串转成 JsonNode
+     * 将 JSON 字符串解析为 JsonNode 对象。
      *
-     * @param jsonString jsonString
-     * @return jsonString json字符串
+     * @param jsonString JSON 字符串
+     * @return 解析后的 JsonNode 对象
      */
     public static JsonNode readTree(String jsonString) {
         return JsonUtil.readTree(jsonString);
     }
 
     /**
-     * 将json字符串转成 JsonNode
+     * 从输入流中读取并解析 JSON 为 JsonNode 对象。
      *
-     * @param in InputStream
-     * @return jsonString json字符串
+     * @param in 包含 JSON 的输入流
+     * @return 解析后的 JsonNode 对象
      */
     public static JsonNode readTree(InputStream in) {
         return JsonUtil.readTree(in);
     }
 
     /**
-     * 将json字符串转成 JsonNode
+     * 从字节数组中读取并解析 JSON 为 JsonNode 对象。
      *
-     * @param content content
-     * @return jsonString json字符串
+     * @param content 包含 JSON 的字节数组
+     * @return 解析后的 JsonNode 对象
      */
     public static JsonNode readTree(byte[] content) {
         return JsonUtil.readTree(content);
     }
 
     /**
-     * 将json字符串转成 JsonNode
+     * 从 JsonParser 中读取并解析 JSON 为 JsonNode 对象。
      *
-     * @param jsonParser JsonParser
-     * @return jsonString json字符串
+     * @param jsonParser JSON 解析器
+     * @return 解析后的 JsonNode 对象
      */
     public static JsonNode readTree(JsonParser jsonParser) {
         return JsonUtil.readTree(jsonParser);
     }
 
     /**
-     * 将json byte 数组反序列化成对象
+     * 将 JSON 字节数组反序列化为指定类型的对象。
      *
-     * @param bytes     json bytes
-     * @param valueType class
-     * @param <T>       T 泛型标记
-     * @return Bean
+     * @param bytes JSON 字节数组
+     * @param valueType 目标类型的 Class 对象
+     * @param <T> 目标类型
+     * @return 反序列化后的对象
      */
     public static <T> T parse(byte[] bytes, Class<T> valueType) {
         return JsonUtil.parse(bytes, valueType);
     }
 
     /**
-     * 将json反序列化成对象
+     * 将 JSON 字符串反序列化为指定类型的对象。
      *
-     * @param jsonString jsonString
-     * @param valueType  class
-     * @param <T>        T 泛型标记
-     * @return Bean
+     * @param jsonString JSON 字符串
+     * @param valueType 目标类型的 Class 对象
+     * @param <T> 目标类型
+     * @return 反序列化后的对象
      */
     public static <T> T parse(String jsonString, Class<T> valueType) {
         return JsonUtil.parse(jsonString, valueType);
     }
 
     /**
-     * 将json反序列化成对象
+     * 从输入流中读取 JSON 并反序列化为指定类型的对象。
      *
-     * @param in        InputStream
-     * @param valueType class
-     * @param <T>       T 泛型标记
-     * @return Bean
+     * @param in 包含 JSON 的输入流
+     * @param valueType 目标类型的 Class 对象
+     * @param <T> 目标类型
+     * @return 反序列化后的对象
      */
     public static <T> T parse(InputStream in, Class<T> valueType) {
         return JsonUtil.parse(in, valueType);
     }
 
     /**
-     * 将json反序列化成对象
+     * 将 JSON 字节数组反序列化为指定泛型类型的对象。
      *
-     * @param bytes         bytes
-     * @param typeReference 泛型类型
-     * @param <T>           T 泛型标记
-     * @return Bean
+     * @param bytes JSON 字节数组
+     * @param typeReference 目标类型的类型引用
+     * @param <T> 目标类型
+     * @return 反序列化后的对象
      */
     public static <T> T parse(byte[] bytes, TypeReference<T> typeReference) {
         return JsonUtil.parse(bytes, typeReference);
     }
 
     /**
-     * 将json反序列化成对象
+     * 将 JSON 字符串反序列化为指定泛型类型的对象。
      *
-     * @param jsonString    jsonString
-     * @param typeReference 泛型类型
-     * @param <T>           T 泛型标记
-     * @return Bean
+     * @param jsonString JSON 字符串
+     * @param typeReference 目标类型的类型引用
+     * @param <T> 目标类型
+     * @return 反序列化后的对象
      */
     public static <T> T parse(String jsonString, TypeReference<T> typeReference) {
         return JsonUtil.parse(jsonString, typeReference);
     }
 
     /**
-     * 将json反序列化成对象
+     * 从输入流中读取 JSON 并反序列化为指定泛型类型的对象。
      *
-     * @param in            InputStream
-     * @param typeReference 泛型类型
-     * @param <T>           T 泛型标记
-     * @return Bean
+     * @param in 包含 JSON 的输入流
+     * @param typeReference 目标类型的类型引用
+     * @param <T> 目标类型
+     * @return 反序列化后的对象
      */
     public static <T> T parse(InputStream in, TypeReference<T> typeReference) {
         return JsonUtil.parse(in, typeReference);
     }
 
     /**
-     * Encode all characters that are either illegal, or have any reserved
-     * meaning, anywhere within a URI, as defined in
-     * <a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>.
-     * This is useful to ensure that the given String will be preserved as-is
-     * and will not have any o impact on the structure or meaning of the URI.
+     * 对 URI 中的所有非法字符或具有特殊含义的字符进行编码。
+     * 
+     * <p>根据 <a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a> 的定义，
+     * 此方法会编码所有在 URI 中非法或具有特殊含义的字符。这样可以确保给定的字符串
+     * 被完整保留，且不会影响 URI 的结构或含义。
      *
-     * @param source the String to be encoded
-     * @return the encoded String
+     * @param source 要编码的字符串
+     * @return 编码后的字符串
      */
     public static String encode(String source) {
         return UrlUtil.encode(source, Charsets.UTF_8);
     }
 
     /**
-     * Encode all characters that are either illegal, or have any reserved
-     * meaning, anywhere within a URI, as defined in
-     * <a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>.
-     * This is useful to ensure that the given String will be preserved as-is
-     * and will not have any o impact on the structure or meaning of the URI.
+     * 对 URI 中的所有非法字符或具有特殊含义的字符进行编码。
+     * 
+     * <p>根据 <a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a> 的定义，
+     * 此方法会编码所有在 URI 中非法或具有特殊含义的字符。这样可以确保给定的字符串
+     * 被完整保留，且不会影响 URI 的结构或含义。
      *
-     * @param source  the String to be encoded
-     * @param charset the character encoding to encode to
-     * @return the encoded String
+     * @param source 要编码的字符串
+     * @param charset 字符编码
+     * @return 编码后的字符串
      */
     public static String encode(String source, Charset charset) {
         return UrlUtil.encode(source, charset);
     }
 
     /**
-     * Decode the given encoded URI component.
-     * <p>See {@link StringUtils#uriDecode(String, Charset)} for the decoding rules.
+     * 解码已编码的 URI 组件。
+     * 
+     * <p>有关解码规则，请参见 {@link StringUtils#uriDecode(String, Charset)}。
      *
-     * @param source the encoded String
-     * @return the decoded value
-     * @throws IllegalArgumentException when the given source contains invalid encoded sequences
+     * @param source 要解码的字符串
+     * @return 解码后的值
+     * @throws IllegalArgumentException 如果给定的源字符串包含无效的编码序列
      * @see StringUtils#uriDecode(String, Charset)
      * @see java.net.URLDecoder#decode(String, String)
      */
@@ -1204,13 +1225,14 @@ public class Func {
     }
 
     /**
-     * Decode the given encoded URI component.
-     * <p>See {@link StringUtils#uriDecode(String, Charset)} for the decoding rules.
+     * 解码已编码的 URI 组件。
+     * 
+     * <p>有关解码规则，请参见 {@link StringUtils#uriDecode(String, Charset)}。
      *
-     * @param source  the encoded String
-     * @param charset the character encoding to use
-     * @return the decoded value
-     * @throws IllegalArgumentException when the given source contains invalid encoded sequences
+     * @param source 要解码的字符串
+     * @param charset 字符编码
+     * @return 解码后的值
+     * @throws IllegalArgumentException 如果给定的源字符串包含无效的编码序列
      * @see StringUtils#uriDecode(String, Charset)
      * @see java.net.URLDecoder#decode(String, String)
      */
@@ -1219,93 +1241,99 @@ public class Func {
     }
 
     /**
-     * 日期时间格式化
+     * 格式化日期时间。
+     * 使用默认的日期时间格式。
      *
-     * @param date 时间
-     * @return 格式化后的时间
+     * @param date 要格式化的日期
+     * @return 格式化后的日期时间字符串
      */
     public static String formatDateTime(Date date) {
         return DateUtil.formatDateTime(date);
     }
 
     /**
-     * 日期格式化
+     * 格式化日期。
+     * 使用默认的日期格式。
      *
-     * @param date 时间
-     * @return 格式化后的时间
+     * @param date 要格式化的日期
+     * @return 格式化后的日期字符串
      */
     public static String formatDate(Date date) {
         return DateUtil.formatDate(date);
     }
 
     /**
-     * 时间格式化
+     * 格式化时间。
+     * 使用默认的时间格式。
      *
-     * @param date 时间
-     * @return 格式化后的时间
+     * @param date 要格式化的日期
+     * @return 格式化后的时间字符串
      */
     public static String formatTime(Date date) {
         return DateUtil.formatTime(date);
     }
 
     /**
-     * 日期格式化
+     * 使用指定的模式格式化日期。
      *
-     * @param date    时间
-     * @param pattern 表达式
-     * @return 格式化后的时间
+     * @param date 要格式化的日期
+     * @param pattern 日期格式模式
+     * @return 格式化后的日期字符串
      */
     public static String format(Date date, String pattern) {
         return DateUtil.format(date, pattern);
     }
 
     /**
-     * 将字符串转换为时间
+     * 将字符串解析为日期。
      *
-     * @param dateStr 时间字符串
-     * @param pattern 表达式
-     * @return 时间
+     * @param dateStr 要解析的日期字符串
+     * @param pattern 日期格式模式
+     * @return 解析后的日期对象
      */
     public static Date parseDate(String dateStr, String pattern) {
         return DateUtil.parse(dateStr, pattern);
     }
 
     /**
-     * 将字符串转换为时间
+     * 将字符串解析为日期。
      *
-     * @param dateStr 时间字符串
-     * @param format  ConcurrentDateFormat
-     * @return 时间
+     * @param dateStr 要解析的日期字符串
+     * @param format 日期格式对象
+     * @return 解析后的日期对象
      */
     public static Date parse(String dateStr, ConcurrentDateFormat format) {
         return DateUtil.parse(dateStr, format);
     }
 
     /**
-     * 日期时间格式化
+     * 格式化日期时间。
+     * 使用默认的日期时间格式。
      *
-     * @param temporal 时间
-     * @return 格式化后的时间
+     * @param temporal 要格式化的时间对象
+     * @return 格式化后的日期时间字符串
      */
     public static String formatDateTime(TemporalAccessor temporal) {
         return DateTimeUtil.formatDateTime(temporal);
     }
 
     /**
-     * 日期时间格式化
+     * 格式化日期。
+     * 使用默认的日期格式。
      *
-     * @param temporal 时间
-     * @return 格式化后的时间
+     * @param temporal 要格式化的时间对象
+     * @return 格式化后的日期字符串
      */
     public static String formatDate(TemporalAccessor temporal) {
         return DateTimeUtil.formatDate(temporal);
     }
 
     /**
-     * 时间格式化
+     * 格式化时间。
+     * 使用默认的时间格式。
      *
-     * @param temporal 时间
-     * @return 格式化后的时间
+     * @param temporal 要格式化的时间对象
+     * @return 格式化后的时间字符串
      */
     public static String formatTime(TemporalAccessor temporal) {
         return DateTimeUtil.formatTime(temporal);
