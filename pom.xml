@@ -20,6 +20,7 @@
         <module>smart-log-starter</module>
         <module>smart-oss-starter</module>
         <module>smart-launch-starter</module>
+        <module>smart-security-starter</module>
     </modules>
 
     <url/>
@@ -87,6 +88,8 @@
         <oss.tencent.sts.version>3.1.1</oss.tencent.sts.version>
         <oss.aws.sdk.version>2.30.22</oss.aws.sdk.version>
         <protostuff.version>1.8.0</protostuff.version>
+        <jjwt.version>0.12.6</jjwt.version>
+        <justAuth.version>1.16.7</justAuth.version>
 
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <maven.test.skip>false</maven.test.skip>
@@ -162,6 +165,11 @@
             <dependency>
                 <groupId>cn.org.byc</groupId>
                 <artifactId>smart-launch-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.org.byc</groupId>
+                <artifactId>smart-security-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <!-- smart end -->
@@ -330,6 +338,24 @@
                 <groupId>net.dreamlu</groupId>
                 <artifactId>mica-auto</artifactId>
                 <version>${mica-auto.version}</version>
+            </dependency>
+
+            <!-- jjwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>me.zhyd.oauth</groupId>
+                <artifactId>JustAuth</artifactId>
+                <version>${justAuth.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
