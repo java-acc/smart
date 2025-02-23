@@ -63,7 +63,7 @@ public class SwaggerProperties {
     /**
      * 许可证
      **/
-    private String license = "Powered By SpringBlade";
+    private String license = "Powered By Ken";
     /**
      * 许可证URL
      **/
